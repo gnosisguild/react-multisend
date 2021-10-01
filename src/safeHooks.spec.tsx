@@ -78,5 +78,57 @@ describe('safe hooks', () => {
       )
       consoleErrorMock.mockRestore()
     })
+
+    it('should not use results of canceled requests', async () => {
+      const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation()
+
+      const { rerender, getByText, queryByLabelText, getByRole } = await render(
+        <ListBalances />
+      )
+      await waitForElementToBeRemoved(getByText('loading...'))
+      expect(queryByLabelText('ETH')).toBeInTheDocument()
+
+      // trigger a refetch, and re-render right afterwards
+      fireEvent.click(getByText('fetch'))
+      rerender(<ListBalances address="0x0" />)
+
+      // previous results are wiped right away
+      expect(queryByLabelText('ETH')).not.toBeInTheDocument()
+
+      await waitForElementToBeRemoved(getByText('loading...'))
+      expect(getByRole('alert')).toHaveTextContent(/Error:/)
+
+      // results of the canceled request, will not be applied
+      expect(queryByLabelText('ETH')).not.toBeInTheDocument()
+
+      consoleErrorMock.mockRestore()
+    })
+
+    it('should reset the loading state when receiving props for a new Safe', async () => {
+      const { rerender, queryByText } = await render(<ListBalances />)
+      expect(queryByText('loading...')).toBeInTheDocument()
+      rerender(<ListBalances lazy address="0x0" />)
+      expect(queryByText('loading...')).not.toBeInTheDocument()
+    })
+
+    it('should reset the error states when receiving props for a new Safe', async () => {
+      const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation()
+
+      const { rerender, getByText, queryByRole } = await render(
+        <ListBalances address="0x0" />
+      )
+      await waitForElementToBeRemoved(getByText('loading...'))
+      expect(queryByRole('alert')).toBeInTheDocument()
+
+      // not every props update shall reset the state...
+      rerender(<ListBalances lazy address="0x0" />)
+      expect(queryByRole('alert')).toBeInTheDocument()
+
+      // ... but when address or network change, state must be reset.
+      rerender(<ListBalances lazy address="0x1" />)
+      expect(queryByRole('alert')).not.toBeInTheDocument()
+
+      consoleErrorMock.mockRestore()
+    })
   })
 })

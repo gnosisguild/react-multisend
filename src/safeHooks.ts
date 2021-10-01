@@ -31,7 +31,7 @@ const createUseFetch = <Result>(fetchFunction: FetchFunction) => {
     }
   ] => {
     const nonce = useRef(0)
-    const [result, setResult] = useState<Result[]>([])
+    const [results, setResults] = useState<Result[]>([])
     const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<Error | null>(null)
 
@@ -48,7 +48,7 @@ const createUseFetch = <Result>(fetchFunction: FetchFunction) => {
           network
         )) as unknown as Result[]
         if (nonce.current === thisNonce) {
-          setResult(newResult)
+          setResults(newResult)
         }
         return newResult
       } catch (error) {
@@ -64,10 +64,17 @@ const createUseFetch = <Result>(fetchFunction: FetchFunction) => {
     }, [address, network])
 
     useEffect(() => {
+      // throw away the previous results when we receive props for a different Safe
+      setResults([])
+      setLoading(false)
+      setError(null)
+    }, [address, network])
+
+    useEffect(() => {
       if (lazy) return
 
       fetch().catch((e) => {
-        // we already make the error available in the state, so we will just swallow it here
+        // we make the error available via state, so we will just swallow it here
         console.error('Safe fetch error', e)
       })
 
@@ -77,7 +84,7 @@ const createUseFetch = <Result>(fetchFunction: FetchFunction) => {
       }
     }, [fetch, lazy])
 
-    return [result, { loading, error, fetch }]
+    return [results, { loading, error, fetch }]
   }
 
   return useFetchFromSafeApi
