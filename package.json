@@ -1,0 +1,53 @@
+{
+  "name": "react-multisend",
+  "version": "1.0.0",
+  "main": "build/cjm/index.js",
+  "module": "build/esm/index.js",
+  "typings": "build/index.d.ts",
+  "repository": "git@github.com:gnosis/react-multisend.git",
+  "author": "Jan-Felix <jan-felix.schwarz@gnosis.io>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "prepare": "yarn build",
+    "prebuild": "rimraf build",
+    "build": "yarn build:cjs && yarn build:esm",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "check": "yarn check:prettier && yarn check:lint && yarn check:spelling",
+    "check:lint": "eslint src test --ext .ts",
+    "check:prettier": "prettier \"src/**/*.ts\" --list-different",
+    "check:spelling": "cspell \"**\"",
+    "fix": "yarn fix:prettier && yarn fix:lint",
+    "fix:prettier": "prettier \"src/**/*.ts\" --write",
+    "fix:lint": "eslint src --ext .ts --fix",
+    "start": "docz dev"
+  },
+  "dependencies": {
+    "ethers": "^5.4.7"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.32.0",
+    "@typescript-eslint/parser": "^4.32.0",
+    "cspell": "^5.11.1",
+    "docz": "^2.3.1",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "prettier": "^2.4.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.4.3"
+  },
+  "resolutions": {
+    "get-pkg-repo": "4.1.1",
+    "hosted-git-info": "^2.1.4"
+  },
+  "peerDependencies": {
+    "react": ">= 16.8",
+    "react-dom": ">= 16.8"
+  }
+}
