@@ -32,7 +32,7 @@ const createUseFetch = <Result>(fetchFunction: FetchFunction) => {
   ] => {
     const nonce = useRef(0)
     const [result, setResult] = useState<Result[]>([])
-    const [loading, setLoading] = useState<boolean>(true)
+    const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<Error | null>(null)
 
     const fetch = useCallback(async () => {
@@ -66,7 +66,11 @@ const createUseFetch = <Result>(fetchFunction: FetchFunction) => {
     useEffect(() => {
       if (lazy) return
 
-      fetch()
+      fetch().catch((e) => {
+        // we already make the error available in the state, so we will just swallow it here
+        console.error('Safe fetch error', e)
+      })
+
       return () => {
         // cancel fetch if still running
         nonce.current = nonce.current + 1
