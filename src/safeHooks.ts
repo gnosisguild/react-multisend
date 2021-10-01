@@ -1,22 +1,35 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { fetchBalances, fetchCollectibles, NetworkId } from './safe'
+import {
+  Balance,
+  Collectible,
+  fetchBalances,
+  fetchCollectibles,
+  NetworkId,
+} from './safe'
 
 type Props = {
   address: string
   network: NetworkId
-  lazy: boolean
+  lazy?: boolean
 }
 
 type FetchFunction = typeof fetchBalances | typeof fetchCollectibles
 
-const createUseFetch = <F extends FetchFunction>(
-  fetchFunction: FetchFunction
-) => {
-  type Result = ReturnType<F>
-
+const createUseFetch = <Result>(fetchFunction: FetchFunction) => {
   // This hook fetches on mount or when the `address` or `network` values are updated. Results are stored in a local state.
   // When passing `lazy: true`, the request won't be triggered until the returned `fetch` callback is invoked.
-  const useFetchFromSafeApi = ({ address, network, lazy }: Props) => {
+  const useFetchFromSafeApi = ({
+    address,
+    network,
+    lazy,
+  }: Props): [
+    Result[],
+    {
+      loading: boolean
+      error: null | Error
+      fetch: () => Promise<Result[]>
+    }
+  ] => {
     const nonce = useRef(0)
     const [result, setResult] = useState<Result[]>([])
     const [loading, setLoading] = useState<boolean>(true)
@@ -30,14 +43,19 @@ const createUseFetch = <F extends FetchFunction>(
       setError(null)
 
       try {
-        const newResult = (await fetchFunction(address, network)) as Result[]
+        const newResult = (await fetchFunction(
+          address,
+          network
+        )) as unknown as Result[]
         if (nonce.current === thisNonce) {
           setResult(newResult)
         }
+        return newResult
       } catch (error) {
         if (nonce.current === thisNonce) {
           setError(error as Error)
         }
+        throw error
       } finally {
         if (nonce.current === thisNonce) {
           setLoading(false)
@@ -57,7 +75,10 @@ const createUseFetch = <F extends FetchFunction>(
 
     return [result, { loading, error, fetch }]
   }
+
+  return useFetchFromSafeApi
 }
 
-export const useSafeBalances = createUseFetch(fetchBalances)
-export const useSafeCollectibles = createUseFetch(fetchCollectibles)
+export const useSafeBalances = createUseFetch<Balance>(fetchBalances)
+export const useSafeCollectibles =
+  createUseFetch<Collectible>(fetchCollectibles)

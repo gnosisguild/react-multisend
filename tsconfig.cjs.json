@@ -3,7 +3,8 @@
   "compilerOptions": {
     "target": "es2017",
     "outDir": "build/cjs",
-    "module": "commonjs"
+    "module": "commonjs",
+    "jsx": "react-jsx"
   },
   "include": ["src/**/*.ts"]
 }

@@ -35,11 +35,13 @@
     // "experimentalDecorators": true /* Enables experimental support for ES7 decorators. */,
     // "emitDecoratorMetadata": true /* Enables experimental support for emitting type metadata for decorators. */,
 
+    "jsx": "react-jsxdev",
+
     "lib": ["es2017", "DOM"],
-    "types": [],
+    "types": ["jest"],
     "typeRoots": ["node_modules/@types", "src/types"]
   },
   "files": ["src/index.ts"],
-  "include": ["src/**/*.ts", "examples/**/*.ts"],
+  "include": ["src/**/*.ts", "examples/**/*.ts", "./jest-setup.ts"],
   "compileOnSave": false
 }
