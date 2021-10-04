@@ -4,5 +4,5 @@
   "language": "en",
   "words": [],
   "flagWords": [],
-  "ignorePaths": ["yarn.lock", "node_modules/**"]
+  "ignorePaths": ["yarn.lock", "node_modules/**", "tsconfig.json"]
 }
