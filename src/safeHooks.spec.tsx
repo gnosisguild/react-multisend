@@ -55,6 +55,7 @@ describe('safe hooks', () => {
       const { getByText, getByLabelText } = render(<ListBalances />)
       await waitForElementToBeRemoved(getByText('loading...'))
       expect(getByLabelText('ETH')).toHaveValue('0.1')
+      expect(getByLabelText('OWL')).toHaveValue('100.0')
     })
 
     it('should use the state provided via context from <ProvideSafeBalances>  when called without arg', async () => {
@@ -99,9 +100,9 @@ describe('safe hooks', () => {
           {loading ? <p>loading...</p> : null}
           {error ? <p role="alert">{error.toString()}</p> : null}
           {collectibles.map((collectible) => (
-            <label key={collectible.id}>
-              {collectible.id}
-              <input type="text" readOnly value={collectible.name} />
+            <label key={`${collectible.address}-${collectible.id}`}>
+              {collectible.tokenName}: {collectible.name}
+              <input type="text" readOnly value={collectible.id} />
             </label>
           ))}
           <button onClick={fetch}>fetch</button>
@@ -110,10 +111,14 @@ describe('safe hooks', () => {
     }
 
     it('should provide the details about collectibles held in the Safe', async () => {
-      const { getByText, getByLabelText, debug } = render(<ListCollectibles />)
+      const { getByText, queryByLabelText, debug } = render(
+        <ListCollectibles />
+      )
       await waitForElementToBeRemoved(getByText('loading...'))
       debug()
-      expect(getByLabelText('TODO')).toHaveValue('TODO')
+      expect(
+        queryByLabelText('Football: DUMMY1 - Tester 1 [26/50]')
+      ).toBeInTheDocument()
     })
 
     it('should use the state provided via context from <ProvideSafeCollectibles> when called without arg', async () => {
@@ -134,7 +139,12 @@ describe('safe hooks', () => {
 
       await waitFor(() =>
         expect(renderSpy).toHaveBeenCalledWith(
-          expect.arrayContaining([expect.objectContaining({ id: 'TODO' })]),
+          expect.arrayContaining([
+            expect.objectContaining({
+              address: '0xF746eaed559A99091ed8F702d0b816a8BF369De0',
+              id: '94',
+            }),
+          ]),
           false
         )
       )

@@ -35,7 +35,7 @@ type Token = {
 
 export type Balance = {
   tokenAddress: string | null
-  token?: null | Token | undefined
+  token: Token | null
   balance: BigNumber
 }
 
