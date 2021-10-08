@@ -1,0 +1,24 @@
+---
+name: Send Funds
+route: /send-funds
+---
+
+import { Playground, Props } from 'docz'
+import { SendFunds } from './SendFunds'
+import { ProvideSafeBalances } from '../src'
+
+# Send Funds Example
+
+<Playground>
+  {() => {
+    const [tx, setTx] = React.useState(undefined)
+    return (
+      <ProvideSafeBalances
+        address="0x1076f084A3703E1701a1a97F837906e56370D4f9"
+        network="4"
+      >
+        <SendFunds value={tx} onChange={setTx} />
+      </ProvideSafeBalances>
+    )
+  }}
+</Playground>

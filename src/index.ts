@@ -1,4 +1,4 @@
-export { Balance, Collectible } from './safe'
+export type { Balance, Collectible } from './safe'
 export {
   useSafeBalances,
   useSafeCollectibles,

@@ -2,7 +2,15 @@
   "version": "0.2",
   "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/master/cspell.schema.json",
   "language": "en",
-  "words": [],
+  "words": [
+    "bignumber",
+    "ethersproject",
+    "Numberish"
+  ],
   "flagWords": [],
-  "ignorePaths": ["yarn.lock", "node_modules/**", "tsconfig.json"]
+  "ignorePaths": [
+    "yarn.lock",
+    "node_modules/**",
+    "tsconfig.json"
+  ]
 }

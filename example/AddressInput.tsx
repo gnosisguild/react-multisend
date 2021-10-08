@@ -1,40 +1,26 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { getAddress } from '@ethersproject/address'
 
 type Props = {
   value: string
-  defaultValue: string
-  onChange: React.ChangeEventHandler<HTMLInputElement>
+  onChange(ev: React.ChangeEvent<HTMLInputElement>, value: string): void
 }
 
-export const AddressInput: React.FC<Props> = ({
-  value,
-  defaultValue,
-  onChange,
-}) => {
-  const [address, setAddress] = useState(value || defaultValue)
-  // const [ensName, setEnsName] = useState<string | null>(null)
-
-  const handleChange = event => {
-    const { value } = event.target
-    setAddress(value)
-    try {
-      console.log('VALID', getAddress(value))
-    } catch (e) {
-      
-    }
-    
+export const validateAddress = (value: string): string | null => {
+  try {
+    return getAddress(value)
+  } catch (e) {
+    return null
   }
-
-  const isValidAddress = true
-  return (
-    <div>
-      <input
-        type="text"
-        value={value}
-        onChange={handleChange}
-        aria-invalid={!isValidAddress}
-      />
-    </div>
-  )
 }
+
+export const AddressInput: React.FC<Props> = ({ value, onChange }) => (
+  <input
+    type="text"
+    value={value}
+    onChange={(ev) => {
+      onChange(ev, validateAddress(value))
+    }}
+    aria-invalid={validateAddress(value) !== null}
+  />
+)
