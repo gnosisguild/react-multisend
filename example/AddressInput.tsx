@@ -19,7 +19,7 @@ export const AddressInput: React.FC<Props> = ({ value, onChange }) => (
     type="text"
     value={value}
     onChange={(ev) => {
-      onChange(ev, validateAddress(value))
+      onChange(ev, ev.target.value)
     }}
     aria-invalid={validateAddress(value) !== null}
   />

@@ -1,7 +1,8 @@
+import React from 'react'
 import { useSafeBalances } from '../src'
 
 type Props = {
-  value?: string // ERC20 token contract address, `null` for ETH
+  value: string | null // ERC20 token contract address, `null` for ETH
   onChange(ev: React.ChangeEvent<HTMLSelectElement>, value: string | null): void
 }
 
@@ -12,11 +13,11 @@ export const AssetSelect: React.FC<Props> = ({ value, onChange }) => {
     <select
       value={value || ''}
       onChange={(ev) => {
-        onChange(ev, value)
+        onChange(ev, value || null)
       }}
     >
       {balances.map((balance) => (
-        <option key={balance.tokenAddress} value={balance.tokenAddress}>
+        <option key={balance.tokenAddress} value={balance.tokenAddress || ''}>
           {balance.token ? balance.token.symbol : 'ETH'} (
           {balance.token ? balance.token.name : 'Ether'})
         </option>

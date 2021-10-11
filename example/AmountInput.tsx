@@ -1,5 +1,4 @@
-import { BigNumber } from '@ethersproject/bignumber'
-import { formatUnits, parseUnits } from '@ethersproject/units'
+import { formatUnits } from '@ethersproject/units'
 import React from 'react'
 import { useSafeBalances } from '../src'
 

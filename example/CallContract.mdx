@@ -1,0 +1,16 @@
+---
+name: Call Contract
+route: /coll-contract
+---
+
+import { Playground } from 'docz'
+import { CallContract } from './CallContract'
+
+# Call Contract Example
+
+<Playground>
+  {() => {
+    const [tx, setTx] = React.useState(undefined)
+    return <CallContract value={tx} onChange={setTx} network="4" />
+  }}
+</Playground>
