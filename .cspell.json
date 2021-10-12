@@ -5,7 +5,8 @@
   "words": [
     "bignumber",
     "ethersproject",
-    "Numberish"
+    "Numberish",
+    "ufixed"
   ],
   "flagWords": [],
   "ignorePaths": [
