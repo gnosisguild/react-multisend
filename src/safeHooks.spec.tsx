@@ -53,7 +53,9 @@ describe('safe hooks', () => {
   describe('useSafeBalances', () => {
     it('should provide the token balances held in the Safe', async () => {
       const { getByText, getByLabelText } = render(<ListBalances />)
-      await waitForElementToBeRemoved(getByText('loading...'))
+      await waitForElementToBeRemoved(getByText('loading...'), {
+        timeout: 5000,
+      })
       expect(getByLabelText('ETH')).toHaveValue('0.1')
       expect(getByLabelText('OWL')).toHaveValue('100.0')
     })
@@ -74,11 +76,13 @@ describe('safe hooks', () => {
       expect(renderSpy).toHaveBeenCalledWith([], true)
       renderSpy.mockClear()
 
-      await waitFor(() =>
-        expect(renderSpy).toHaveBeenCalledWith(
-          expect.arrayContaining([expect.objectContaining({ token: null })]),
-          false
-        )
+      await waitFor(
+        () =>
+          expect(renderSpy).toHaveBeenCalledWith(
+            expect.arrayContaining([expect.objectContaining({ token: null })]),
+            false
+          ),
+        { timeout: 5000 }
       )
     })
   })
@@ -111,11 +115,10 @@ describe('safe hooks', () => {
     }
 
     it('should provide the details about collectibles held in the Safe', async () => {
-      const { getByText, queryByLabelText, debug } = render(
-        <ListCollectibles />
-      )
-      await waitForElementToBeRemoved(getByText('loading...'))
-      debug()
+      const { getByText, queryByLabelText } = render(<ListCollectibles />)
+      await waitForElementToBeRemoved(getByText('loading...'), {
+        timeout: 5000,
+      })
       expect(
         queryByLabelText('Football: DUMMY1 - Tester 1 [26/50]')
       ).toBeInTheDocument()
@@ -137,16 +140,18 @@ describe('safe hooks', () => {
       expect(renderSpy).toHaveBeenCalledWith([], true)
       renderSpy.mockClear()
 
-      await waitFor(() =>
-        expect(renderSpy).toHaveBeenCalledWith(
-          expect.arrayContaining([
-            expect.objectContaining({
-              address: '0xF746eaed559A99091ed8F702d0b816a8BF369De0',
-              id: '94',
-            }),
-          ]),
-          false
-        )
+      await waitFor(
+        () =>
+          expect(renderSpy).toHaveBeenCalledWith(
+            expect.arrayContaining([
+              expect.objectContaining({
+                address: '0xF746eaed559A99091ed8F702d0b816a8BF369De0',
+                id: '94',
+              }),
+            ]),
+            false
+          ),
+        { timeout: 5000 }
       )
     })
   })
@@ -163,7 +168,7 @@ describe('safe hooks', () => {
     expect(queryByText('loading...')).not.toBeInTheDocument()
     fireEvent.click(getByText('fetch'))
     const loadingIndicator = getByText('loading...')
-    await waitForElementToBeRemoved(loadingIndicator)
+    await waitForElementToBeRemoved(loadingIndicator, { timeout: 5000 })
     expect(getByLabelText('ETH')).toHaveValue('0.1')
   })
 
@@ -171,7 +176,7 @@ describe('safe hooks', () => {
     const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation()
     const { getByText, getByRole } = render(<ListBalances address="0x0" />)
     const loadingIndicator = getByText('loading...')
-    await waitForElementToBeRemoved(loadingIndicator)
+    await waitForElementToBeRemoved(loadingIndicator, { timeout: 5000 })
     expect(getByRole('alert')).toHaveTextContent(/Error:/)
     expect(consoleErrorMock).toHaveBeenCalledWith(
       'Safe fetch error',
@@ -186,7 +191,7 @@ describe('safe hooks', () => {
     const { rerender, getByText, queryByLabelText, getByRole } = render(
       <ListBalances />
     )
-    await waitForElementToBeRemoved(getByText('loading...'))
+    await waitForElementToBeRemoved(getByText('loading...'), { timeout: 5000 })
     expect(queryByLabelText('ETH')).toBeInTheDocument()
 
     // trigger a refetch, and re-render right afterwards
@@ -196,7 +201,7 @@ describe('safe hooks', () => {
     // previous results are wiped right away
     expect(queryByLabelText('ETH')).not.toBeInTheDocument()
 
-    await waitForElementToBeRemoved(getByText('loading...'))
+    await waitForElementToBeRemoved(getByText('loading...'), { timeout: 5000 })
     expect(getByRole('alert')).toHaveTextContent(/Error:/)
 
     // results of the canceled request, will not be applied
@@ -218,7 +223,7 @@ describe('safe hooks', () => {
     const { rerender, getByText, queryByRole } = render(
       <ListBalances address="0x0" />
     )
-    await waitForElementToBeRemoved(getByText('loading...'))
+    await waitForElementToBeRemoved(getByText('loading...'), { timeout: 5000 })
     expect(queryByRole('alert')).toBeInTheDocument()
 
     // not every props update shall reset the state...
@@ -268,7 +273,7 @@ describe('safe hooks', () => {
     expect(queryByText('loading...')).not.toBeInTheDocument()
 
     fireEvent.click(getByText('fetch from other'))
-    await waitForElementToBeRemoved(getByText('loading...'))
+    await waitForElementToBeRemoved(getByText('loading...'), { timeout: 5000 })
     expect(getByLabelText('ETH')).toHaveValue('0.1')
   })
 })
