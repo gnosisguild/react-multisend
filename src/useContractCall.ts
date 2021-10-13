@@ -88,7 +88,6 @@ interface ReturnValue {
   inputs: Input[]
   functions: ContractFunction[]
   loading: boolean
-  isValidAbi: boolean
 }
 
 export const useContractCall = ({
@@ -191,6 +190,5 @@ export const useContractCall = ({
     payable,
     inputs,
     loading,
-    isValidAbi: !!contractInterface,
   }
 }

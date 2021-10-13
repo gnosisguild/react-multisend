@@ -16,8 +16,34 @@ const TEST_CONTRACT_ABI = new Interface([
 
 describe('useContractCall', () => {
   const TestComponent = (props: Props) => {
-    const { loading } = useContractCall(props)
-    return <div>{loading && <span>loading...</span>}</div>
+    const { loading, payable, inputs, functions } = useContractCall(props)
+    return (
+      <div>
+        {loading && <span>loading...</span>}
+        {payable && <span>payable</span>}
+        <ul data-testid="functions">
+          {functions.map((f) => (
+            <li>{f.name}</li>
+          ))}
+        </ul>
+        {inputs && (
+          <form data-testid="inputs">
+            {inputs.map((input) => (
+              <label>
+                <span>
+                  {input.name} ({input.type})
+                </span>
+                <input
+                  type="text"
+                  name={input.name}
+                  value={JSON.stringify(input.value)}
+                />
+              </label>
+            ))}
+          </form>
+        )}
+      </div>
+    )
   }
 
   it('should fetch the ABI for the contract at the provided address', async () => {
@@ -38,22 +64,13 @@ describe('useContractCall', () => {
   })
 
   it('should return state updating functions only', () => {
-    const ListFunctionNames = () => {
-      const { functions } = useContractCall({
-        value: { ...INITIAL_VALUE, abi: TEST_CONTRACT_ABI },
-        onChange: jest.fn(),
-        network: '4',
-      })
-      return (
-        <ul>
-          {functions.map((f) => (
-            <li>{f.name}</li>
-          ))}
-        </ul>
-      )
-    }
-
-    const { getAllByRole, queryByText } = render(<ListFunctionNames />)
+    const { getAllByRole, queryByText } = render(
+      <TestComponent
+        value={{ ...INITIAL_VALUE, abi: TEST_CONTRACT_ABI }}
+        onChange={jest.fn()}
+        network="4"
+      />
+    )
     const functionItems = getAllByRole('listitem')
     expect(functionItems).toHaveLength(4)
     expect(queryByText('changeOwner')).toBeInTheDocument()
@@ -106,9 +123,9 @@ describe('useContractCall', () => {
   })
 
   it('should return inputs by merging the param type info read from the ABI with the inputValues of the value', async () => {
-    const InputForm = () => {
-      const { inputs } = useContractCall({
-        value: {
+    const { getByLabelText } = render(
+      <TestComponent
+        value={{
           to: '',
           value: '',
           abi: TEST_CONTRACT_ABI,
@@ -121,30 +138,11 @@ describe('useContractCall', () => {
               '0x68970a60fbc4274e1c604efd6e55d700cd0f140c',
             ],
           },
-        },
-        onChange: jest.fn(),
-        network: '4',
-      })
-
-      return (
-        <form>
-          {inputs.map((input) => (
-            <label>
-              <span>
-                {input.name} ({input.type})
-              </span>
-              <input
-                type="text"
-                name={input.name}
-                value={JSON.stringify(input.value)}
-              />
-            </label>
-          ))}
-        </form>
-      )
-    }
-
-    const { getByLabelText } = render(<InputForm />)
+        }}
+        onChange={jest.fn()}
+        network="4"
+      />
+    )
     expect(getByLabelText('stringParam (string)')).toHaveValue(
       JSON.stringify('foo')
     )
@@ -158,11 +156,100 @@ describe('useContractCall', () => {
     )
   })
 
-  it.todo('should not include unnamed inputs')
+  it('should not include unnamed inputs', () => {
+    const { getAllByRole } = render(
+      <TestComponent
+        value={{
+          to: '',
+          value: '',
+          abi: TEST_CONTRACT_ABI,
+          functionSignature: 'payWithUnnamedParam(int256,bool)',
+          inputValues: {},
+        }}
+        onChange={jest.fn()}
+        network="4"
+      />
+    )
+    expect(getAllByRole('textbox')).toHaveLength(1)
+  })
 
-  it.todo('should indicate when ABI is being fetched')
-  it.todo('should indicate if the provided ABI value is invalid')
-  it.todo(
-    'should cancel pending ABI requests when the contract address is updated'
-  )
+  it('should indicate when ABI is being fetched', async () => {
+    const { queryByText, getByText, rerender } = render(
+      <TestComponent
+        network="4"
+        value={{ ...INITIAL_VALUE, abi: TEST_CONTRACT_ABI }}
+        onChange={jest.fn()}
+      />
+    )
+
+    expect(queryByText('loading...')).not.toBeInTheDocument()
+
+    rerender(
+      <TestComponent
+        network="4"
+        value={{ ...INITIAL_VALUE, to: TEST_CONTRACT_ADDRESS }}
+        onChange={jest.fn()}
+      />
+    )
+    await waitForElementToBeRemoved(getByText('loading...'), { timeout: 5000 })
+  })
+
+  it('should return whether the selected function is payable', () => {
+    const { queryByText, rerender } = render(
+      <TestComponent
+        network="4"
+        value={{
+          to: '',
+          value: '',
+          abi: TEST_CONTRACT_ABI,
+          functionSignature: 'changeOwner(address)',
+          inputValues: {},
+        }}
+        onChange={jest.fn()}
+      />
+    )
+    expect(queryByText('payable')).not.toBeInTheDocument()
+
+    rerender(
+      <TestComponent
+        network="4"
+        value={{
+          to: '',
+          value: '',
+          abi: TEST_CONTRACT_ABI,
+          functionSignature: 'pay(int256)',
+          inputValues: {},
+        }}
+        onChange={jest.fn()}
+      />
+    )
+    expect(queryByText('payable')).toBeInTheDocument()
+  })
+
+  it('should cancel pending ABI requests when the contract address is updated', async () => {
+    const { getByText, rerender, queryByText, debug } = render(
+      <TestComponent
+        network="4"
+        value={{ ...INITIAL_VALUE, to: TEST_CONTRACT_ADDRESS }}
+        onChange={jest.fn()}
+      />
+    )
+
+    rerender(
+      <TestComponent
+        network="4"
+        value={{
+          ...INITIAL_VALUE,
+          to: '0x8BcD4780Bc643f9C802CF69908ef3D34A59F4e5c', // TestToken contract address
+        }}
+        onChange={jest.fn()}
+      />
+    )
+
+    await waitForElementToBeRemoved(getByText('loading...'), { timeout: 5000 })
+
+    // lists functions of the TestToken contract rather than those of the contract requested first
+    expect(queryByText('mint')).toBeInTheDocument()
+    expect(queryByText('changeOwner')).not.toBeInTheDocument()
+  })
 })
