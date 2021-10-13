@@ -5,8 +5,7 @@ import { INITIAL_VALUE, Props, useContractCall } from '../src/useContractCall'
 
 export const CallContract: React.FC<Props> = (props) => {
   const { value = INITIAL_VALUE, onChange } = props
-  const { functions, payable, inputs, loading, updateAbi } =
-    useContractCall(props)
+  const { functions, payable, inputs, loading } = useContractCall(props)
 
   return (
     <fieldset>
@@ -22,16 +21,21 @@ export const CallContract: React.FC<Props> = (props) => {
         ABI
         <AbiInput
           value={value.abi}
-          onChange={(ev) => updateAbi(ev.target.value)}
+          onChange={(ev) => onChange({ ...value, abi: ev.target.value })}
           format={AbiFormat.FULL}
         />
       </label>
       <label>
         Method
         <select
-          value={value.method}
+          disabled={loading}
+          value={value.functionSignature}
           onChange={(ev) =>
-            onChange({ ...value, method: ev.target.value, inputValues: {} })
+            onChange({
+              ...value,
+              functionSignature: ev.target.value,
+              inputValues: {},
+            })
           }
         >
           {functions.map((func) => (

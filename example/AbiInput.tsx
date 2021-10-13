@@ -14,18 +14,32 @@ export enum AbiFormat {
 
 type Props = {
   value: string
-  onChange(ev: React.ChangeEvent<HTMLTextAreaElement>): void
+  onChange(ev: React.ChangeEvent<HTMLTextAreaElement>, value: string): void
   format: AbiFormat
 }
 
 const formatAbi = (value: string, format: AbiFormat): string | null => {
+  const abiInterface = new Interface(value)
+  const formatted = abiInterface.format(EthersAbiFormats[format])
+  if (typeof formatted === 'string') return formatted
+  return formatted.join('\n')
+}
+
+const parseAbi = (value: string): string => {
+  let input
   try {
-    const abiInterface = new Interface(value)
-    const formatted = abiInterface.format(EthersAbiFormats[format])
-    if (typeof formatted === 'string') return formatted
-    return formatted.join('\n')
+    // try if the value is JSON format
+    input = JSON.parse(value)
   } catch (e) {
-    return null
+    // it's not JSON, so maybe it's human readable format
+    input = value.split('\n')
+  }
+
+  try {
+    const abiInterface = new Interface(input)
+    return abiInterface.format(FormatTypes.json) as string
+  } catch (e) {
+    return ''
   }
 }
 
@@ -34,7 +48,9 @@ export const AbiInput: React.FC<Props> = ({ value, onChange, format }) => {
   return (
     <textarea
       value={formatted || value}
-      onChange={onChange}
+      onChange={(ev) => {
+        onChange(ev, parseAbi(ev.target.value))
+      }}
       aria-invalid={formatted !== null}
     />
   )

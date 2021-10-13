@@ -18,6 +18,7 @@ const EXPLORER_API_URLS = {
   '56': 'https://api.bscscan.com/api',
   '42161': 'https://api.arbiscan.io/api',
 }
+
 type ValueType =
   | string
   | boolean
@@ -27,8 +28,8 @@ type ValueType =
 type CallContractTransactionInput = {
   to: string // contract address
   value: string
-  abi: string
-  functionSignature: string // the function signature in FormatTypes.minimal format
+  abi: string // ABI as JSON string
+  functionSignature: string
   inputValues: { [key: string]: ValueType }
 }
 
@@ -63,7 +64,11 @@ const fetchContractAbi = async (
   }
 
   const { result, status } = await response.json()
-  return status === 0 ? '' : result
+  if (status === 0) return ''
+
+  // bring the JSON into ethers.js canonical form
+  // (so we don't trigger unnecessary updates when looking at the same ABI in different forms)
+  return new Interface(result).format(FormatTypes.json) as string
 }
 
 interface Input {
@@ -84,7 +89,6 @@ interface ReturnValue {
   functions: ContractFunction[]
   loading: boolean
   isValidAbi: boolean
-  updateAbi(abi: string): void
 }
 
 export const useContractCall = ({
@@ -109,9 +113,7 @@ export const useContractCall = ({
     let canceled = false
 
     const address = validateAddress(to)
-    if (!address) {
-      updateAbi('')
-    } else {
+    if (address) {
       setLoading(true)
       fetchContractAbi(network, address).then((abi) => {
         if (!canceled) {
@@ -127,20 +129,46 @@ export const useContractCall = ({
   }, [updateAbi, network, to])
 
   const contractInterface = useMemo(() => {
-    if (!abi) return new Interface([])
-    return new Interface(abi)
+    if (!abi) return null
+    try {
+      return new Interface(abi)
+    } catch (e) {
+      return null
+    }
   }, [abi])
 
-  // reset selected function if it doesn't exist in the current contract interface
-  useEffect(() => {
-    if (!contractInterface.functions[valueRef.current.functionSignature]) {
-      onChangeRef.current({ ...valueRef.current, functionSignature: '' })
-    }
-  }, [contractInterface])
+  const functions = Object.entries(contractInterface?.functions || [])
+    .map(([signature, func]) => ({
+      ...func,
+      format: func.format,
+      signature,
+    }))
+    .filter((func) => !func.constant) // only list state updating functions
 
-  const payable =
-    contractInterface.functions[functionSignature]?.payable || false
-  const inputTypes = contractInterface.functions[functionSignature]?.inputs
+  const selectedFunction = functions.find(
+    (f) => f.signature === functionSignature
+  )
+  const selectedFunctionExists = !!selectedFunction
+  const firstFunctionSignature = functions[0]?.signature || ''
+
+  useEffect(() => {
+    if (!selectedFunctionExists) {
+      onChangeRef.current({
+        ...valueRef.current,
+        functionSignature: firstFunctionSignature,
+      })
+    }
+  }, [selectedFunctionExists, firstFunctionSignature])
+
+  // // reset selected function if it doesn't exist in the current contract interface
+  // useEffect(() => {
+  //   if (!selectedFunction) {
+  //     onChangeRef.current({ ...valueRef.current, functionSignature: '' })
+  //   }
+  // }, [selectedFunction])
+
+  const payable = selectedFunction?.payable || false
+  const inputTypes = selectedFunction?.inputs
 
   const inputs = useMemo(
     () =>
@@ -158,22 +186,11 @@ export const useContractCall = ({
     [inputTypes, inputValues]
   )
 
-  const functions = Object.values(contractInterface.functions || [])
-    .filter(
-      (func) => !func.constant // only list state updating functions
-    )
-    .map((func) => ({
-      ...func,
-      format: func.format,
-      signature: func.format(FormatTypes.minimal),
-    }))
-
   return {
     functions,
     payable,
     inputs,
     loading,
     isValidAbi: !!contractInterface,
-    updateAbi,
   }
 }
