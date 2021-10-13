@@ -19,6 +19,7 @@ type Props = {
 }
 
 const formatAbi = (value: string, format: AbiFormat): string | null => {
+  if (!value) return null
   const abiInterface = new Interface(value)
   const formatted = abiInterface.format(EthersAbiFormats[format])
   if (typeof formatted === 'string') return formatted
@@ -26,6 +27,8 @@ const formatAbi = (value: string, format: AbiFormat): string | null => {
 }
 
 const parseAbi = (value: string): string => {
+  if (!value) return ''
+
   let input
   try {
     // try if the value is JSON format

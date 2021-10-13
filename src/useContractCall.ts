@@ -37,6 +37,7 @@ export type Props = {
   value?: CallContractTransactionInput
   onChange(value: CallContractTransactionInput): void
   network: NetworkId
+  apiKey?: string // Etherscan/block explorer API key
 }
 
 export const INITIAL_VALUE = {
@@ -49,13 +50,15 @@ export const INITIAL_VALUE = {
 
 const fetchContractAbi = async (
   network: NetworkId,
-  contractAddress: string
+  contractAddress: string,
+  apiKey = ''
 ) => {
   const apiUrl = EXPLORER_API_URLS[network]
   const params = new URLSearchParams({
     module: 'contract',
     action: 'getAbi',
     address: contractAddress,
+    apiKey,
   })
 
   const response = await fetch(`${apiUrl}?${params}`)
@@ -64,7 +67,10 @@ const fetchContractAbi = async (
   }
 
   const { result, status } = await response.json()
-  if (status === 0) return ''
+  if (status === '0') {
+    console.error(`Could not fetch contract ABI: ${result}`)
+    return ''
+  }
 
   // bring the JSON into ethers.js canonical form
   // (so we don't trigger unnecessary updates when looking at the same ABI in different forms)
@@ -94,6 +100,7 @@ export const useContractCall = ({
   value = INITIAL_VALUE,
   onChange,
   network,
+  apiKey,
 }: Props): ReturnValue => {
   const { to, abi, functionSignature, inputValues } = value
 
@@ -114,7 +121,7 @@ export const useContractCall = ({
     const address = validateAddress(to)
     if (address) {
       setLoading(true)
-      fetchContractAbi(network, address).then((abi) => {
+      fetchContractAbi(network, address, apiKey).then((abi) => {
         if (!canceled) {
           updateAbi(abi)
           setLoading(false)
@@ -125,7 +132,7 @@ export const useContractCall = ({
     return () => {
       canceled = true
     }
-  }, [updateAbi, network, to])
+  }, [updateAbi, network, to, apiKey])
 
   const contractInterface = useMemo(() => {
     if (!abi) return null
@@ -158,13 +165,6 @@ export const useContractCall = ({
       })
     }
   }, [selectedFunctionExists, firstFunctionSignature])
-
-  // // reset selected function if it doesn't exist in the current contract interface
-  // useEffect(() => {
-  //   if (!selectedFunction) {
-  //     onChangeRef.current({ ...valueRef.current, functionSignature: '' })
-  //   }
-  // }, [selectedFunction])
 
   const payable = selectedFunction?.payable || false
   const inputTypes = selectedFunction?.inputs

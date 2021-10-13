@@ -16,7 +16,10 @@ const TEST_CONTRACT_ABI = new Interface([
 
 describe('useContractCall', () => {
   const TestComponent = (props: Props) => {
-    const { loading, payable, inputs, functions } = useContractCall(props)
+    const { loading, payable, inputs, functions } = useContractCall({
+      ...props,
+      apiKey: process.env.ETHERSCAN_API_KEY,
+    })
     return (
       <div>
         {loading && <span>loading...</span>}
@@ -227,7 +230,8 @@ describe('useContractCall', () => {
   })
 
   it('should cancel pending ABI requests when the contract address is updated', async () => {
-    const { getByText, rerender, queryByText, debug } = render(
+    const onChange = jest.fn()
+    const { getByText, rerender } = render(
       <TestComponent
         network="4"
         value={{ ...INITIAL_VALUE, to: TEST_CONTRACT_ADDRESS }}
@@ -235,12 +239,32 @@ describe('useContractCall', () => {
       />
     )
 
+    const TEST_TOKEN_CONTRACT_ABI = new Interface([
+      'constructor(uint8 _decimals)',
+      'event Approval(address indexed owner, address indexed spender, uint256 value)',
+      'event Transfer(address indexed from, address indexed to, uint256 value)',
+      'function allowance(address owner, address spender) view returns (uint256)',
+      'function approve(address spender, uint256 amount) returns (bool)',
+      'function balanceOf(address account) view returns (uint256)',
+      'function decimals() view returns (uint8)',
+      'function decreaseAllowance(address spender, uint256 subtractedValue) returns (bool)',
+      'function increaseAllowance(address spender, uint256 addedValue) returns (bool)',
+      'function mint(address to, uint256 amount)',
+      'function name() view returns (string)',
+      'function owner() view returns (address)',
+      'function symbol() view returns (string)',
+      'function totalSupply() view returns (uint256)',
+      'function transfer(address recipient, uint256 amount) returns (bool)',
+      'function transferFrom(address sender, address recipient, uint256 amount) returns (bool)',
+    ]).format(FormatTypes.json) as string
+    const TEST_TOKEN_CONTRACT_ADDRESS =
+      '0x8BcD4780Bc643f9C802CF69908ef3D34A59F4e5c'
     rerender(
       <TestComponent
         network="4"
         value={{
           ...INITIAL_VALUE,
-          to: '0x8BcD4780Bc643f9C802CF69908ef3D34A59F4e5c', // TestToken contract address
+          to: TEST_TOKEN_CONTRACT_ADDRESS,
         }}
         onChange={jest.fn()}
       />
@@ -248,8 +272,15 @@ describe('useContractCall', () => {
 
     await waitForElementToBeRemoved(getByText('loading...'), { timeout: 5000 })
 
-    // lists functions of the TestToken contract rather than those of the contract requested first
-    expect(queryByText('mint')).toBeInTheDocument()
-    expect(queryByText('changeOwner')).not.toBeInTheDocument()
+    expect(onChange).not.toHaveBeenCalledWith(
+      expect.objectContaining({
+        abi: TEST_CONTRACT_ABI,
+      })
+    )
+    expect(onChange).not.toHaveBeenCalledWith(
+      expect.objectContaining({
+        abi: TEST_TOKEN_CONTRACT_ABI,
+      })
+    )
   })
 })

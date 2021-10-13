@@ -6,5 +6,6 @@
     "module": "esnext",
     "jsx": "react-jsx"
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["**/*.spec.ts", "**/*.spec.tsx"]
 }

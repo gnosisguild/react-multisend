@@ -2,6 +2,7 @@ node_modules
 build
 coverage
 .docz
+.env
 
 *.log
 npm-debug.log*
