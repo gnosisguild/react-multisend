@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { nanoid } from 'nanoid'
@@ -20,6 +20,7 @@ export interface ClassNames {
   transactionHeader?: string
   removeTransaction?: string
   dragHandle?: string
+  titleWrapper?: string
   title?: string
   index?: string
 }
@@ -27,6 +28,7 @@ export interface ClassNames {
 interface HeaderProps {
   index: number
   value: TransactionInput
+  onClick(): void
   onRemove(): void
   classNames: ClassNames
   dragListeners: DraggableSyntheticListeners
@@ -40,6 +42,7 @@ interface HeaderProps {
 const TransactionHeader: React.FC<HeaderProps> = ({
   index,
   value,
+  onClick,
   onRemove,
   classNames,
   dragListeners,
@@ -62,16 +65,18 @@ const TransactionHeader: React.FC<HeaderProps> = ({
   }
 
   return (
-    <div className={classNames.transactionHeader}>
+    <div className={classNames.transactionHeader} onClick={onClick}>
       <button
         className={classNames.dragHandle}
         title="drag to move"
         {...dragListeners}
         {...dragAttributes}
       />
-      <div className={classNames.title}>
-        <span className={classNames.index}>{index}</span>
-        {title}
+      <div className={classNames.titleWrapper}>
+        <span className={classNames.title}>
+          <span className={classNames.index}>{index}</span>
+          {title}
+        </span>
       </div>
       <button
         onClick={onRemove}
@@ -124,6 +129,7 @@ export const Transaction: React.FC<Props> = ({
   onRemove,
   classNames = {},
 }) => {
+  const [collapsed, setCollapsed] = useState(false)
   const {
     attributes,
     listeners,
@@ -143,7 +149,7 @@ export const Transaction: React.FC<Props> = ({
     onRemove(index)
   }
   const style = {
-    transform: CSS.Transform.toString(transform),
+    transform: CSS.Translate.toString(transform),
     transition,
     zIndex: isDragging ? 1 : undefined,
   }
@@ -153,16 +159,21 @@ export const Transaction: React.FC<Props> = ({
         index={index}
         value={value}
         onRemove={handleRemove}
+        onClick={() => setCollapsed(!collapsed)}
         classNames={classNames}
         dragListeners={listeners}
         dragAttributes={attributes}
       />
-      <TransactionTypeSelect value={value.type} onChange={switchType} />
-      <TransactionContent
-        value={value}
-        onChange={handleChange}
-        classNames={classNames}
-      />
+      {!collapsed && (
+        <>
+          <TransactionTypeSelect value={value.type} onChange={switchType} />
+          <TransactionContent
+            value={value}
+            onChange={handleChange}
+            classNames={classNames}
+          />
+        </>
+      )}
     </div>
   )
 }

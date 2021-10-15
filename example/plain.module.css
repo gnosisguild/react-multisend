@@ -29,7 +29,7 @@
 
 .transaction label {
   display: block;
-  margin-bottom: 12px;
+  margin-top: 12px;
 }
 
 .transaction input,
@@ -72,7 +72,10 @@
 
 .transactionHeader {
   position: relative;
-  margin-bottom: 12px;
+}
+.titleWrapper {
+  margin: 0 32px;
+  cursor: pointer;
 }
 .title {
   border: 1px solid black;
@@ -80,7 +83,6 @@
   font-weight: bold;
   padding: 4px 12px 4px 4px;
   background-color: white;
-  margin: 0 32px;
   display: inline-block;
 }
 .index {
