@@ -1,14 +1,14 @@
 import React from 'react'
-import { SendCollectibleTransactionInput } from '../src'
+import { TransferCollectibleTransactionInput } from '../src'
 import { AddressInput } from './AddressInput'
 import { CollectibleSelect } from './CollectibleSelect'
 
 type Props = {
-  value: SendCollectibleTransactionInput
-  onChange(value: SendCollectibleTransactionInput): void
+  value: TransferCollectibleTransactionInput
+  onChange(value: TransferCollectibleTransactionInput): void
 }
 
-export const SendCollectible: React.FC<Props> = ({ value, onChange }) => {
+export const TransferCollectible: React.FC<Props> = ({ value, onChange }) => {
   return (
     <fieldset>
       <label>

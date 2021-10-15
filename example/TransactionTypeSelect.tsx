@@ -14,8 +14,8 @@ export const TransactionTypeSelect: React.FC<Props> = ({ value, onChange }) => {
         value={value}
         onChange={(ev) => onChange(ev.target.value as TransactionType)}
       >
-        <option value="sendFunds">Send funds</option>
-        <option value="sendCollectible">Send collectible</option>
+        <option value="transferFunds">Transfer funds</option>
+        <option value="transferCollectible">Transfer collectible</option>
         <option value="callContract">Call contract</option>
         <option value="raw">Raw transaction</option>
       </select>

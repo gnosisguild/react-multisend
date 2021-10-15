@@ -10,8 +10,8 @@ import {
 } from '../src'
 import { CallContract } from './CallContract'
 import { RawTransaction } from './RawTransaction'
-import { SendCollectible } from './SendCollectible'
-import { SendFunds } from './SendFunds'
+import { TransferCollectible } from './TransferCollectible'
+import { TransferFunds } from './TransferFunds'
 import { TransactionTypeSelect } from './TransactionTypeSelect'
 import { DraggableSyntheticListeners } from '@dnd-kit/core'
 
@@ -50,11 +50,11 @@ const TransactionHeader: React.FC<HeaderProps> = ({
     case TransactionType.callContract:
       title = 'Call contract'
       break
-    case TransactionType.sendFunds:
-      title = 'Send funds'
+    case TransactionType.transferFunds:
+      title = 'Transfer funds'
       break
-    case TransactionType.sendCollectible:
-      title = 'Send collectible'
+    case TransactionType.transferCollectible:
+      title = 'Transfer collectible'
       break
     case TransactionType.raw:
       title = 'Raw transaction'
@@ -100,10 +100,10 @@ const TransactionContent: React.FC<ContentProps> = ({ value, onChange }) => {
           blockExplorerApiKey={blockExplorerApiKey}
         />
       )
-    case TransactionType.sendFunds:
-      return <SendFunds value={value} onChange={onChange} />
-    case TransactionType.sendCollectible:
-      return <SendCollectible value={value} onChange={onChange} />
+    case TransactionType.transferFunds:
+      return <TransferFunds value={value} onChange={onChange} />
+    case TransactionType.transferCollectible:
+      return <TransferCollectible value={value} onChange={onChange} />
     case TransactionType.raw:
       return <RawTransaction value={value} onChange={onChange} />
   }

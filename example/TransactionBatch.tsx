@@ -37,7 +37,7 @@ interface Props {
 export const TransactionBatch: React.FC<Props> = ({
   value,
   onChange,
-  defaultTransactionType = TransactionType.sendFunds,
+  defaultTransactionType = TransactionType.transferFunds,
   classNames = {},
 }) => {
   const sensors = useSensors(

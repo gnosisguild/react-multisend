@@ -5,8 +5,8 @@ export type ValueType =
   | { [key: string]: ValueType }
 
 export enum TransactionType {
-  sendFunds = 'sendFunds',
-  sendCollectible = 'sendCollectible',
+  transferFunds = 'transferFunds',
+  transferCollectible = 'transferCollectible',
   callContract = 'callContract',
   raw = 'raw',
 }
@@ -20,16 +20,16 @@ export interface CallContractTransactionInput {
   inputValues: { [key: string]: ValueType }
 }
 
-export interface SendFundsTransactionInput {
-  type: TransactionType.sendFunds
+export interface TransferFundsTransactionInput {
+  type: TransactionType.transferFunds
   id: string // not relevant for encoding the final transaction
   token: string | null // ERC20 token contract address, `null` for ETH
   to: string // address of recipient
   amount: string
 }
 
-export interface SendCollectibleTransactionInput {
-  type: TransactionType.sendCollectible
+export interface TransferCollectibleTransactionInput {
+  type: TransactionType.transferCollectible
   id: string // not relevant for encoding the final transaction
   address: string // ERC721 contract address
   tokenId: string // ID of the NFT
@@ -46,6 +46,6 @@ export interface RawTransactionInput {
 
 export type TransactionInput =
   | CallContractTransactionInput
-  | SendFundsTransactionInput
-  | SendCollectibleTransactionInput
+  | TransferFundsTransactionInput
+  | TransferCollectibleTransactionInput
   | RawTransactionInput

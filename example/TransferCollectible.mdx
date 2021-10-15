@@ -1,29 +1,29 @@
 ---
-name: Send Collectible
-route: /send-collectible
+name: Transfer Collectible
+route: /transfer-collectible
 ---
 
 import { Playground, Props } from 'docz'
-import { SendCollectible } from './SendCollectible'
+import { TransferCollectible } from './TransferCollectible'
 import {
   ProvideSafeCollectibles,
   createTransaction,
   TransactionType,
 } from '../src'
 
-# Send Collectible Example
+# Transfer Collectible Example
 
 <Playground>
   {() => {
     const [tx, setTx] = React.useState(
-      createTransaction(TransactionType.sendCollectible)
+      createTransaction(TransactionType.transferCollectible)
     )
     return (
       <ProvideSafeCollectibles
         address="0x1076f084A3703E1701a1a97F837906e56370D4f9"
         network="4"
       >
-        <SendCollectible value={tx} onChange={setTx} />
+        <TransferCollectible value={tx} onChange={setTx} />
       </ProvideSafeCollectibles>
     )
   }}

@@ -1,15 +1,15 @@
 import React from 'react'
-import { SendFundsTransactionInput } from '../src'
+import { TransferFundsTransactionInput } from '../src'
 import { AddressInput } from './AddressInput'
 import { AmountInput } from './AmountInput'
 import { AssetSelect } from './AssetSelect'
 
 type Props = {
-  value: SendFundsTransactionInput
-  onChange(value: SendFundsTransactionInput): void
+  value: TransferFundsTransactionInput
+  onChange(value: TransferFundsTransactionInput): void
 }
 
-export const SendFunds: React.FC<Props> = ({ value, onChange }) => {
+export const TransferFunds: React.FC<Props> = ({ value, onChange }) => {
   return (
     <fieldset>
       <label>

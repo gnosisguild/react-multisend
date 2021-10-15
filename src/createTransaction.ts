@@ -15,12 +15,12 @@ export const createTransaction = <T extends TransactionType>(
         functionSignature: '',
         inputValues: {},
       } as Extract<TransactionInput, { type: T }>
-    case TransactionType.sendFunds:
+    case TransactionType.transferFunds:
       return { type, id, token: '', to: '', amount: '' } as Extract<
         TransactionInput,
         { type: T }
       >
-    case TransactionType.sendCollectible:
+    case TransactionType.transferCollectible:
       return { type, id, address: '', tokenId: '', to: '' } as Extract<
         TransactionInput,
         { type: T }

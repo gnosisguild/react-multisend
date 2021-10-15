@@ -1,25 +1,25 @@
 ---
-name: Send Funds
-route: /send-funds
+name: Transfer Funds
+route: /transfer-funds
 ---
 
 import { Playground, Props } from 'docz'
-import { SendFunds } from './SendFunds'
+import { TransferFunds } from './TransferFunds'
 import { ProvideSafeBalances, createTransaction, TransactionType } from '../src'
 
-# Send Funds Example
+# Transfer Funds Example
 
 <Playground>
   {() => {
     const [tx, setTx] = React.useState(
-      createTransaction(TransactionType.sendFunds)
+      createTransaction(TransactionType.transferFunds)
     )
     return (
       <ProvideSafeBalances
         address="0x1076f084A3703E1701a1a97F837906e56370D4f9"
         network="4"
       >
-        <SendFunds value={tx} onChange={setTx} />
+        <TransferFunds value={tx} onChange={setTx} />
       </ProvideSafeBalances>
     )
   }}

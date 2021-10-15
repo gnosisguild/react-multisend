@@ -18,7 +18,7 @@ import * as classNames from './plain.module.css'
 <Playground>
   {() => {
     const [batch, setBatch] = React.useState([
-      createTransaction(TransactionType.sendFunds, nanoid()),
+      createTransaction(TransactionType.transferFunds, nanoid()),
     ])
     return (
       <ProvideMultiSendContext
