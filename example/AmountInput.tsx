@@ -24,7 +24,7 @@ export const AmountInput: React.FC<Props> = ({ token, value, onChange }) => {
         // don't allow sending more than the Avatar holds
         balance && formatUnits(balance.balance, decimals)
       }
-      step={formatUnits(1, decimals)}
+      // step={formatUnits(1, decimals)}
       onChange={(ev) => {
         onChange(ev, ev.target.value)
       }}

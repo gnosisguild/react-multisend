@@ -18,8 +18,8 @@ export const AssetSelect: React.FC<Props> = ({ value, onChange }) => {
     >
       {balances.map((balance) => (
         <option key={balance.tokenAddress} value={balance.tokenAddress || ''}>
-          {balance.token ? balance.token.symbol : 'ETH'} (
-          {balance.token ? balance.token.name : 'Ether'})
+          {balance.token ? balance.token.name : 'Ether'} (
+          {balance.token ? balance.token.symbol : 'ETH'})
         </option>
       ))}
     </select>

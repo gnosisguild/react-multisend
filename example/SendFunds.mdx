@@ -5,13 +5,13 @@ route: /send-funds
 
 import { Playground, Props } from 'docz'
 import { SendFunds } from './SendFunds'
-import { ProvideSafeBalances } from '../src'
+import { ProvideSafeBalances, createTransaction } from '../src'
 
 # Send Funds Example
 
 <Playground>
   {() => {
-    const [tx, setTx] = React.useState(undefined)
+    const [tx, setTx] = React.useState(createTransaction('sendFunds'))
     return (
       <ProvideSafeBalances
         address="0x1076f084A3703E1701a1a97F837906e56370D4f9"

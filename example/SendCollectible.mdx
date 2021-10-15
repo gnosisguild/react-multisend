@@ -5,13 +5,13 @@ route: /send-collectible
 
 import { Playground, Props } from 'docz'
 import { SendCollectible } from './SendCollectible'
-import { ProvideSafeCollectibles } from '../src'
+import { ProvideSafeCollectibles, createTransaction } from '../src'
 
 # Send Collectible Example
 
 <Playground>
   {() => {
-    const [tx, setTx] = React.useState(undefined)
+    const [tx, setTx] = React.useState(createTransaction('sendCollectible'))
     return (
       <ProvideSafeCollectibles
         address="0x1076f084A3703E1701a1a97F837906e56370D4f9"

@@ -1,3 +1,4 @@
+import React from 'react'
 import { Collectible, useSafeCollectibles } from '../src'
 
 type CollectibleInput = {

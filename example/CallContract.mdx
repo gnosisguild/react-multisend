@@ -5,12 +5,13 @@ route: /call-contract
 
 import { Playground } from 'docz'
 import { CallContract } from './CallContract'
+import { createTransaction } from '../src'
 
 # Call Contract Example
 
 <Playground>
   {() => {
-    const [tx, setTx] = React.useState(undefined)
+    const [tx, setTx] = React.useState(createTransaction('callContract'))
     return <CallContract value={tx} onChange={setTx} network="4" />
   }}
 </Playground>

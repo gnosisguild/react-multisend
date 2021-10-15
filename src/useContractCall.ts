@@ -7,6 +7,7 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { NetworkId } from './safe'
 import { validateAddress } from '../example/AddressInput'
+import { CallContractTransactionInput, ValueType } from './types'
 
 const EXPLORER_API_URLS = {
   '1': 'https://api.etherscan.io/api',
@@ -19,28 +20,15 @@ const EXPLORER_API_URLS = {
   '42161': 'https://api.arbiscan.io/api',
 }
 
-type ValueType =
-  | string
-  | boolean
-  | Array<ValueType>
-  | { [key: string]: ValueType }
-
-type CallContractTransactionInput = {
-  to: string // contract address
-  value: string
-  abi: string // ABI as JSON string
-  functionSignature: string
-  inputValues: { [key: string]: ValueType }
-}
-
 export type Props = {
   value?: CallContractTransactionInput
   onChange(value: CallContractTransactionInput): void
   network: NetworkId
-  apiKey?: string // Etherscan/block explorer API key
+  blockExplorerApiKey?: string // Etherscan/block explorer API key
 }
 
 export const INITIAL_VALUE = {
+  type: 'callContract' as const,
   to: '',
   value: '',
   abi: '',
@@ -51,14 +39,14 @@ export const INITIAL_VALUE = {
 const fetchContractAbi = async (
   network: NetworkId,
   contractAddress: string,
-  apiKey = ''
+  blockExplorerApiKey = ''
 ) => {
   const apiUrl = EXPLORER_API_URLS[network]
   const params = new URLSearchParams({
     module: 'contract',
     action: 'getAbi',
     address: contractAddress,
-    apiKey,
+    blockExplorerApiKey,
   })
 
   const response = await fetch(`${apiUrl}?${params}`)
@@ -100,7 +88,7 @@ export const useContractCall = ({
   value = INITIAL_VALUE,
   onChange,
   network,
-  apiKey,
+  blockExplorerApiKey,
 }: Props): ReturnValue => {
   const { to, abi, functionSignature, inputValues } = value
 
@@ -121,7 +109,7 @@ export const useContractCall = ({
     const address = validateAddress(to)
     if (address) {
       setLoading(true)
-      fetchContractAbi(network, address, apiKey).then((abi) => {
+      fetchContractAbi(network, address, blockExplorerApiKey).then((abi) => {
         if (!canceled) {
           updateAbi(abi)
           setLoading(false)
@@ -132,7 +120,7 @@ export const useContractCall = ({
     return () => {
       canceled = true
     }
-  }, [updateAbi, network, to, apiKey])
+  }, [updateAbi, network, to, blockExplorerApiKey])
 
   const contractInterface = useMemo(() => {
     if (!abi) return null

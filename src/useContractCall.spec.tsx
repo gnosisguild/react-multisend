@@ -18,7 +18,7 @@ describe('useContractCall', () => {
   const TestComponent = (props: Props) => {
     const { loading, payable, inputs, functions } = useContractCall({
       ...props,
-      apiKey: process.env.ETHERSCAN_API_KEY,
+      blockExplorerApiKey: process.env.ETHERSCAN_API_KEY,
     })
     return (
       <div>
@@ -129,6 +129,7 @@ describe('useContractCall', () => {
     const { getByLabelText } = render(
       <TestComponent
         value={{
+          type: 'callContract',
           to: '',
           value: '',
           abi: TEST_CONTRACT_ABI,
@@ -163,6 +164,7 @@ describe('useContractCall', () => {
     const { getAllByRole } = render(
       <TestComponent
         value={{
+          type: 'callContract',
           to: '',
           value: '',
           abi: TEST_CONTRACT_ABI,
@@ -202,6 +204,7 @@ describe('useContractCall', () => {
       <TestComponent
         network="4"
         value={{
+          type: 'callContract',
           to: '',
           value: '',
           abi: TEST_CONTRACT_ABI,
@@ -217,6 +220,7 @@ describe('useContractCall', () => {
       <TestComponent
         network="4"
         value={{
+          type: 'callContract',
           to: '',
           value: '',
           abi: TEST_CONTRACT_ABI,

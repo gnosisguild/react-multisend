@@ -1,24 +1,34 @@
 import React from 'react'
 import { AbiFormat, AbiInput } from './AbiInput'
 import { AddressInput } from './AddressInput'
-import { INITIAL_VALUE, Props, useContractCall } from '../src/useContractCall'
+import {
+  useContractCall,
+  CallContractTransactionInput,
+  NetworkId,
+} from '../src'
+
+interface Props {
+  value: CallContractTransactionInput
+  onChange(value: CallContractTransactionInput): void
+  network: NetworkId
+  blockExplorerApiKey?: string
+}
 
 export const CallContract: React.FC<Props> = (props) => {
-  const { value = INITIAL_VALUE, onChange } = props
+  const { value, onChange } = props
   const { functions, payable, inputs, loading } = useContractCall(props)
 
   return (
     <fieldset>
-      <legend>Call contract</legend>
       <label>
-        To
+        <span>Contract</span>
         <AddressInput
           value={value.to}
           onChange={(ev, to) => onChange({ ...value, to })}
         />
       </label>
       <label>
-        ABI
+        <span>ABI</span>
         <AbiInput
           value={value.abi}
           onChange={(ev) => onChange({ ...value, abi: ev.target.value })}
@@ -26,7 +36,7 @@ export const CallContract: React.FC<Props> = (props) => {
         />
       </label>
       <label>
-        Method
+        <span>Method</span>
         <select
           disabled={loading}
           value={value.functionSignature}
@@ -47,7 +57,7 @@ export const CallContract: React.FC<Props> = (props) => {
       </label>
       {payable && (
         <label>
-          Value (wei)
+          <span>Value (wei)</span>
           <input
             type="number"
             value={value.value}
@@ -59,7 +69,7 @@ export const CallContract: React.FC<Props> = (props) => {
         <fieldset>
           {inputs.map((input) => (
             <label key={input.name}>
-              {input.name} <span>({input.type})</span>
+              {input.name} <i>{input.type}</i>
               <input
                 type="text"
                 value={`${input.value || ''}`}
