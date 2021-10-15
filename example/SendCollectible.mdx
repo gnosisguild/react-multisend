@@ -11,7 +11,9 @@ import { ProvideSafeCollectibles, createTransaction } from '../src'
 
 <Playground>
   {() => {
-    const [tx, setTx] = React.useState(createTransaction('sendCollectible'))
+    const [tx, setTx] = React.useState(
+      createTransaction(TransactionType.sendCollectible)
+    )
     return (
       <ProvideSafeCollectibles
         address="0x1076f084A3703E1701a1a97F837906e56370D4f9"

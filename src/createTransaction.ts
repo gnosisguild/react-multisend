@@ -1,22 +1,35 @@
-import { TransactionType } from './types'
+import { TransactionInput, TransactionType } from './types'
 
-export const createTransaction = (type: TransactionType) => {
+export const createTransaction = <T extends TransactionType>(
+  type: T,
+  id = ''
+): Extract<TransactionInput, { type: T }> => {
   switch (type) {
-    case 'callContract':
+    case TransactionType.callContract:
       return {
         type,
+        id,
         to: '',
         value: '',
         abi: '',
         functionSignature: '',
         inputValues: {},
-      }
-    case 'sendFunds':
-      return { type, token: '', to: '', amount: '' }
-    case 'sendCollectible':
-      return { type, address: '', id: '', to: '' }
-    case 'raw':
-      return { type, to: '', value: '', data: '' }
+      } as Extract<TransactionInput, { type: T }>
+    case TransactionType.sendFunds:
+      return { type, id, token: '', to: '', amount: '' } as Extract<
+        TransactionInput,
+        { type: T }
+      >
+    case TransactionType.sendCollectible:
+      return { type, id, address: '', tokenId: '', to: '' } as Extract<
+        TransactionInput,
+        { type: T }
+      >
+    case TransactionType.raw:
+      return { type, id, to: '', value: '', data: '' } as Extract<
+        TransactionInput,
+        { type: T }
+      >
   }
 
   throw new Error(`Invalid transaction type: ${type}`)

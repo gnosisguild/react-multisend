@@ -1,7 +1,8 @@
 import { Interface, FormatTypes } from '@ethersproject/abi'
 import { render, waitForElementToBeRemoved } from '@testing-library/react'
 import React from 'react'
-import { INITIAL_VALUE, Props, useContractCall } from './useContractCall'
+import { createTransaction, TransactionType } from '.'
+import { Props, useContractCall } from './useContractCall'
 
 const TEST_CONTRACT_ADDRESS = '0x68970a60fbc4274e1c604efd6e55d700cd0f140c'
 const TEST_CONTRACT_ABI = new Interface([
@@ -54,7 +55,10 @@ describe('useContractCall', () => {
     const { getByText } = render(
       <TestComponent
         network="4"
-        value={{ ...INITIAL_VALUE, to: TEST_CONTRACT_ADDRESS }}
+        value={{
+          ...createTransaction(TransactionType.callContract),
+          to: TEST_CONTRACT_ADDRESS,
+        }}
         onChange={onChange}
       />
     )
@@ -69,7 +73,7 @@ describe('useContractCall', () => {
   it('should return state updating functions only', () => {
     const { getAllByRole, queryByText } = render(
       <TestComponent
-        value={{ ...INITIAL_VALUE, abi: TEST_CONTRACT_ABI }}
+        value={{ ...createTransaction(TransactionType.callContract), abi: TEST_CONTRACT_ABI }}
         onChange={jest.fn()}
         network="4"
       />
@@ -85,7 +89,7 @@ describe('useContractCall', () => {
     const { rerender } = render(
       <TestComponent
         network="4"
-        value={{ ...INITIAL_VALUE, abi: TEST_CONTRACT_ABI }}
+        value={{ ...createTransaction(TransactionType.callContract), abi: TEST_CONTRACT_ABI }}
         onChange={onChange}
       />
     )
@@ -110,7 +114,7 @@ describe('useContractCall', () => {
       <TestComponent
         network="4"
         value={{
-          ...INITIAL_VALUE,
+          ...createTransaction(TransactionType.callContract),
           functionSignature: 'changeOwner(address)',
           abi: newAbi,
         }}
@@ -129,9 +133,7 @@ describe('useContractCall', () => {
     const { getByLabelText } = render(
       <TestComponent
         value={{
-          type: 'callContract',
-          to: '',
-          value: '',
+          ...createTransaction(TransactionType.callContract),
           abi: TEST_CONTRACT_ABI,
           functionSignature:
             'functionWithLotsOfParams(string,address[2],int256[][],(bytes8,bool),function)',
@@ -164,9 +166,7 @@ describe('useContractCall', () => {
     const { getAllByRole } = render(
       <TestComponent
         value={{
-          type: 'callContract',
-          to: '',
-          value: '',
+          ...createTransaction(TransactionType.callContract),
           abi: TEST_CONTRACT_ABI,
           functionSignature: 'payWithUnnamedParam(int256,bool)',
           inputValues: {},
@@ -182,7 +182,7 @@ describe('useContractCall', () => {
     const { queryByText, getByText, rerender } = render(
       <TestComponent
         network="4"
-        value={{ ...INITIAL_VALUE, abi: TEST_CONTRACT_ABI }}
+        value={{ ...createTransaction(TransactionType.callContract), abi: TEST_CONTRACT_ABI }}
         onChange={jest.fn()}
       />
     )
@@ -192,7 +192,10 @@ describe('useContractCall', () => {
     rerender(
       <TestComponent
         network="4"
-        value={{ ...INITIAL_VALUE, to: TEST_CONTRACT_ADDRESS }}
+        value={{
+          ...createTransaction(TransactionType.callContract),
+          to: TEST_CONTRACT_ADDRESS,
+        }}
         onChange={jest.fn()}
       />
     )
@@ -204,12 +207,9 @@ describe('useContractCall', () => {
       <TestComponent
         network="4"
         value={{
-          type: 'callContract',
-          to: '',
-          value: '',
+          ...createTransaction(TransactionType.callContract)
           abi: TEST_CONTRACT_ABI,
           functionSignature: 'changeOwner(address)',
-          inputValues: {},
         }}
         onChange={jest.fn()}
       />
@@ -220,12 +220,9 @@ describe('useContractCall', () => {
       <TestComponent
         network="4"
         value={{
-          type: 'callContract',
-          to: '',
-          value: '',
+          ...createTransaction(TransactionType.callContract),
           abi: TEST_CONTRACT_ABI,
           functionSignature: 'pay(int256)',
-          inputValues: {},
         }}
         onChange={jest.fn()}
       />
@@ -238,7 +235,10 @@ describe('useContractCall', () => {
     const { getByText, rerender } = render(
       <TestComponent
         network="4"
-        value={{ ...INITIAL_VALUE, to: TEST_CONTRACT_ADDRESS }}
+        value={{
+          ...createTransaction(TransactionType.callContract),
+          to: TEST_CONTRACT_ADDRESS,
+        }}
         onChange={jest.fn()}
       />
     )
@@ -267,7 +267,7 @@ describe('useContractCall', () => {
       <TestComponent
         network="4"
         value={{
-          ...INITIAL_VALUE,
+          ...createTransaction(TransactionType.callContract),
           to: TEST_TOKEN_CONTRACT_ADDRESS,
         }}
         onChange={jest.fn()}

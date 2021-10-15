@@ -11,7 +11,9 @@ import { ProvideSafeBalances, createTransaction } from '../src'
 
 <Playground>
   {() => {
-    const [tx, setTx] = React.useState(createTransaction('sendFunds'))
+    const [tx, setTx] = React.useState(
+      createTransaction(TransactionType.sendFunds)
+    )
     return (
       <ProvideSafeBalances
         address="0x1076f084A3703E1701a1a97F837906e56370D4f9"

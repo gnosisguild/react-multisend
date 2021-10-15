@@ -14,9 +14,9 @@ export const SendCollectible: React.FC<Props> = ({ value, onChange }) => {
       <label>
         <span>Collectible</span>
         <CollectibleSelect
-          value={{ address: value.address, id: value.id }}
-          onChange={(ev, { address, id }) =>
-            onChange({ ...value, address, id })
+          value={{ address: value.address, tokenId: value.tokenId }}
+          onChange={(ev, { address, tokenId }) =>
+            onChange({ ...value, address, tokenId })
           }
         />
       </label>

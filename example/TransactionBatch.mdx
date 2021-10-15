@@ -4,6 +4,7 @@ route: /transaction-batch
 ---
 
 import { Playground, Props } from 'docz'
+import { nanoid } from 'nanoid'
 import { TransactionBatch } from './TransactionBatch'
 import { ProvideMultiSendContext, createTransaction } from '../src'
 import * as classNames from './plain.module.css'
@@ -12,7 +13,9 @@ import * as classNames from './plain.module.css'
 
 <Playground>
   {() => {
-    const [batch, setBatch] = React.useState([createTransaction('sendFunds')])
+    const [batch, setBatch] = React.useState([
+      createTransaction(TransactionType.sendFunds, nanoid()),
+    ])
     return (
       <ProvideMultiSendContext
         safeAddress="0x1076f084A3703E1701a1a97F837906e56370D4f9"

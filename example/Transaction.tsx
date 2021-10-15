@@ -1,4 +1,7 @@
 import React from 'react'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
+import { nanoid } from 'nanoid'
 import {
   createTransaction,
   TransactionInput,
@@ -10,6 +13,7 @@ import { RawTransaction } from './RawTransaction'
 import { SendCollectible } from './SendCollectible'
 import { SendFunds } from './SendFunds'
 import { TransactionTypeSelect } from './TransactionTypeSelect'
+import { DraggableSyntheticListeners } from '@dnd-kit/core'
 
 export interface ClassNames {
   transaction?: string
@@ -25,6 +29,12 @@ interface HeaderProps {
   value: TransactionInput
   onRemove(): void
   classNames: ClassNames
+  dragListeners: DraggableSyntheticListeners
+  dragAttributes: {
+    role?: string
+    roleDescription?: string
+    tabIndex?: number
+  }
 }
 
 const TransactionHeader: React.FC<HeaderProps> = ({
@@ -32,26 +42,33 @@ const TransactionHeader: React.FC<HeaderProps> = ({
   value,
   onRemove,
   classNames,
+  dragListeners,
+  dragAttributes,
 }) => {
   let title
   switch (value.type) {
-    case 'callContract':
+    case TransactionType.callContract:
       title = 'Call contract'
       break
-    case 'sendFunds':
+    case TransactionType.sendFunds:
       title = 'Send funds'
       break
-    case 'sendCollectible':
+    case TransactionType.sendCollectible:
       title = 'Send collectible'
       break
-    case 'raw':
+    case TransactionType.raw:
       title = 'Raw transaction'
       break
   }
 
   return (
     <div className={classNames.transactionHeader}>
-      <button className={classNames.dragHandle} title="drag to move" />
+      <button
+        className={classNames.dragHandle}
+        title="drag to move"
+        {...dragListeners}
+        {...dragAttributes}
+      />
       <div className={classNames.title}>
         <span className={classNames.index}>{index}</span>
         {title}
@@ -74,7 +91,7 @@ interface ContentProps {
 const TransactionContent: React.FC<ContentProps> = ({ value, onChange }) => {
   const { network, blockExplorerApiKey } = useMultiSendContext()
   switch (value.type) {
-    case 'callContract':
+    case TransactionType.callContract:
       return (
         <CallContract
           value={value}
@@ -83,11 +100,11 @@ const TransactionContent: React.FC<ContentProps> = ({ value, onChange }) => {
           blockExplorerApiKey={blockExplorerApiKey}
         />
       )
-    case 'sendFunds':
+    case TransactionType.sendFunds:
       return <SendFunds value={value} onChange={onChange} />
-    case 'sendCollectible':
+    case TransactionType.sendCollectible:
       return <SendCollectible value={value} onChange={onChange} />
-    case 'raw':
+    case TransactionType.raw:
       return <RawTransaction value={value} onChange={onChange} />
   }
 }
@@ -107,8 +124,11 @@ export const Transaction: React.FC<Props> = ({
   onRemove,
   classNames = {},
 }) => {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: `${index}` })
+
   const switchType = (newType: TransactionType) => {
-    onChange(createTransaction(newType), index)
+    onChange(createTransaction(newType, nanoid()), index)
   }
   const handleChange = (newValue: TransactionInput) => {
     onChange(newValue, index)
@@ -116,14 +136,16 @@ export const Transaction: React.FC<Props> = ({
   const handleRemove = () => {
     onRemove(index)
   }
-
+  const style = { transform: CSS.Transform.toString(transform), transition }
   return (
-    <div className={classNames.transaction}>
+    <div className={classNames.transaction} ref={setNodeRef} style={style}>
       <TransactionHeader
         index={index}
         value={value}
         onRemove={handleRemove}
         classNames={classNames}
+        dragListeners={listeners}
+        dragAttributes={attributes}
       />
       <TransactionTypeSelect value={value.type} onChange={switchType} />
       <TransactionContent

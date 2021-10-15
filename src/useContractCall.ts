@@ -7,7 +7,12 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { NetworkId } from './safe'
 import { validateAddress } from '../example/AddressInput'
-import { CallContractTransactionInput, ValueType } from './types'
+import {
+  CallContractTransactionInput,
+  TransactionType,
+  ValueType,
+} from './types'
+import { createTransaction } from '.'
 
 const EXPLORER_API_URLS = {
   '1': 'https://api.etherscan.io/api',
@@ -25,15 +30,6 @@ export type Props = {
   onChange(value: CallContractTransactionInput): void
   network: NetworkId
   blockExplorerApiKey?: string // Etherscan/block explorer API key
-}
-
-export const INITIAL_VALUE = {
-  type: 'callContract' as const,
-  to: '',
-  value: '',
-  abi: '',
-  functionSignature: '',
-  inputValues: {},
 }
 
 const fetchContractAbi = async (
@@ -85,7 +81,7 @@ interface ReturnValue {
 }
 
 export const useContractCall = ({
-  value = INITIAL_VALUE,
+  value = createTransaction(TransactionType.callContract),
   onChange,
   network,
   blockExplorerApiKey,

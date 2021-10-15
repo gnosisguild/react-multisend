@@ -3,7 +3,7 @@ import { Collectible, useSafeCollectibles } from '../src'
 
 type CollectibleInput = {
   address: string // ERC721 token contract address
-  id: string // ID of the NFT
+  tokenId: string // ID of the NFT
 }
 
 type Props = {
@@ -29,10 +29,10 @@ const groupByAddress = (collectibles: Collectible[]) => {
 }
 
 const serializeValue = (value: CollectibleInput) =>
-  `${value.address}/${value.id}`
+  `${value.address}/${value.tokenId}`
 const parseValue = (serialized: string): CollectibleInput => {
-  const [address, id] = serialized.split('/')
-  return { address, id }
+  const [address, tokenId] = serialized.split('/')
+  return { address, tokenId }
 }
 
 export const CollectibleSelect: React.FC<Props> = ({ value, onChange }) => {
@@ -50,7 +50,13 @@ export const CollectibleSelect: React.FC<Props> = ({ value, onChange }) => {
       {groups.map((group) => (
         <optgroup key={group[0].address} label={group[0].tokenName}>
           {group.map((collectible) => (
-            <option key={collectible.id} value={serializeValue(collectible)}>
+            <option
+              key={collectible.id}
+              value={serializeValue({
+                address: collectible.address,
+                tokenId: collectible.id,
+              })}
+            >
               {collectible.name}
             </option>
           ))}

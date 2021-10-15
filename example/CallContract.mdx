@@ -11,7 +11,9 @@ import { createTransaction } from '../src'
 
 <Playground>
   {() => {
-    const [tx, setTx] = React.useState(createTransaction('callContract'))
+    const [tx, setTx] = React.useState(
+      createTransaction(TransactionType.callContract)
+    )
     return <CallContract value={tx} onChange={setTx} network="4" />
   }}
 </Playground>
