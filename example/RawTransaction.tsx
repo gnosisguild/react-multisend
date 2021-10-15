@@ -10,7 +10,7 @@ interface Props {
 export const RawTransaction: React.FC<Props> = ({ value, onChange }) => (
   <div>
     <label>
-      <span>To</span>
+      <span>To</span> <i>address</i>
       <AddressInput
         value={value.to}
         onChange={(ev, to) => onChange({ ...value, to })}

@@ -124,8 +124,14 @@ export const Transaction: React.FC<Props> = ({
   onRemove,
   classNames = {},
 }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: value.id })
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: value.id })
 
   const switchType = (newType: TransactionType) => {
     onChange(createTransaction(newType, nanoid()), index)
@@ -136,7 +142,11 @@ export const Transaction: React.FC<Props> = ({
   const handleRemove = () => {
     onRemove(index)
   }
-  const style = { transform: CSS.Transform.toString(transform), transition }
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 1 : undefined,
+  }
   return (
     <div className={classNames.transaction} ref={setNodeRef} style={style}>
       <TransactionHeader

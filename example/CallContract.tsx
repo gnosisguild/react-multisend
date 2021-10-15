@@ -21,7 +21,7 @@ export const CallContract: React.FC<Props> = (props) => {
   return (
     <fieldset>
       <label>
-        <span>Contract</span>
+        <span>Contract</span> <i>address</i>
         <AddressInput
           value={value.to}
           onChange={(ev, to) => onChange({ ...value, to })}

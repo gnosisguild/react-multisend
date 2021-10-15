@@ -21,7 +21,7 @@ export const TransferCollectible: React.FC<Props> = ({ value, onChange }) => {
         />
       </label>
       <label>
-        <span>To</span>
+        <span>To</span> <i>address</i>
         <AddressInput
           value={value.to}
           onChange={(ev, to) => onChange({ ...value, to })}
