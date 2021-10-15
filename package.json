@@ -14,6 +14,7 @@
     "build": "yarn build:cjs && yarn build:esm",
     "build:cjs": "tsc -p tsconfig.cjs.json",
     "build:esm": "tsc -p tsconfig.esm.json",
+    "build:doc": "docz build",
     "check": "yarn check:prettier && yarn check:lint && yarn check:spelling",
     "check:lint": "eslint src --ext .ts,.tsx",
     "check:prettier": "prettier \"src/**/*.(ts|tsx)\" --list-different",

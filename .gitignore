@@ -3,6 +3,7 @@ build
 coverage
 .docz
 .env
+.DS_Store
 
 *.log
 npm-debug.log*
