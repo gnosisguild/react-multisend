@@ -6,6 +6,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  DragEndEvent,
 } from '@dnd-kit/core'
 import {
   arrayMove,
@@ -13,6 +14,10 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
+import {
+  restrictToVerticalAxis,
+  restrictToWindowEdges,
+} from '@dnd-kit/modifiers'
 import { nanoid } from 'nanoid'
 import { createTransaction, TransactionInput, TransactionType } from '../src'
 import { Transaction, ClassNames as TransactionClassNames } from './Transaction'
@@ -50,12 +55,12 @@ export const TransactionBatch: React.FC<Props> = ({
     onChange([...value.slice(0, index), ...value.slice(index + 1)])
   }
 
-  const handleDragEnd = (event) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
-    if (active.id !== over.id) {
-      onChange(
-        arrayMove(value, value.indexOf(active.id), value.indexOf(over.id))
-      )
+    if (over && active.id !== over.id) {
+      const activeIndex = value.findIndex((tx) => tx.id === active.id)
+      const overIndex = value.findIndex((tx) => tx.id === over.id)
+      onChange(arrayMove(value, activeIndex, overIndex))
     }
   }
 
@@ -64,6 +69,7 @@ export const TransactionBatch: React.FC<Props> = ({
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
+        modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
         onDragEnd={handleDragEnd}
       >
         <SortableContext items={value} strategy={verticalListSortingStrategy}>

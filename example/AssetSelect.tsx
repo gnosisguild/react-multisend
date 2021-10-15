@@ -13,7 +13,7 @@ export const AssetSelect: React.FC<Props> = ({ value, onChange }) => {
     <select
       value={value || ''}
       onChange={(ev) => {
-        onChange(ev, value || null)
+        onChange(ev, ev.target.value || null)
       }}
     >
       {balances.map((balance) => (

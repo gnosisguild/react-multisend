@@ -13,7 +13,7 @@ export enum TransactionType {
 export interface CallContractTransactionInput {
   type: TransactionType.callContract
   id: string // not relevant for encoding the final transaction
-  to: string // contract address
+  address: string // contract address
   value: string // amount of wei to send
   abi: string // ABI as JSON string
   functionSignature: string

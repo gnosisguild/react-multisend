@@ -125,7 +125,7 @@ export const Transaction: React.FC<Props> = ({
   classNames = {},
 }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: `${index}` })
+    useSortable({ id: value.id })
 
   const switchType = (newType: TransactionType) => {
     onChange(createTransaction(newType, nanoid()), index)
