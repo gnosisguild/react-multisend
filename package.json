@@ -61,7 +61,6 @@
     "hosted-git-info": "^2.1.4"
   },
   "peerDependencies": {
-    "react": ">= 16.8",
-    "react-dom": ">= 16.8"
+    "react": ">= 16.8"
   }
 }

@@ -49,3 +49,16 @@ export type TransactionInput =
   | TransferFundsTransactionInput
   | TransferCollectibleTransactionInput
   | RawTransactionInput
+
+/// Types from @gnosis.pm/safe-core-sdk-types
+export enum OperationType {
+  Call, // 0
+  DelegateCall, // 1
+}
+
+export interface MetaTransactionData {
+  readonly to: string
+  readonly value: string
+  readonly data: string
+  readonly operation?: OperationType
+}
