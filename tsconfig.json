@@ -42,6 +42,6 @@
     "typeRoots": ["node_modules/@types", "src/types"]
   },
   "files": ["src/index.ts"],
-  "include": ["src/**/*", "example/**/*", "./jest-setup.ts"],
+  "include": ["src/**/*", "docs/**/*", "./jest-setup.ts"],
   "compileOnSave": false
 }

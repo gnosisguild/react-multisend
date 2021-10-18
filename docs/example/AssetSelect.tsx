@@ -1,5 +1,5 @@
 import React from 'react'
-import { useSafeBalances } from '../src'
+import { useSafeBalances } from '../../src'
 
 type Props = {
   value: string | null // ERC20 token contract address, `null` for ETH

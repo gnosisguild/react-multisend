@@ -6,7 +6,7 @@ type Props = {
   onChange(ev: React.ChangeEvent<HTMLInputElement>, value: string): void
 }
 
-export const validateAddress = (value: string): string | null => {
+const validateAddress = (value: string): string | null => {
   try {
     return getAddress(value)
   } catch (e) {

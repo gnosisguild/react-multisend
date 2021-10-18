@@ -19,7 +19,7 @@ import {
   restrictToWindowEdges,
 } from '@dnd-kit/modifiers'
 import { nanoid } from 'nanoid'
-import { createTransaction, TransactionInput, TransactionType } from '../src'
+import { createTransaction, TransactionInput, TransactionType } from '../../src'
 import { Transaction, ClassNames as TransactionClassNames } from './Transaction'
 
 interface ClassNames extends TransactionClassNames {

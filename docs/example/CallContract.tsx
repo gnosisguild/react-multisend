@@ -5,7 +5,7 @@ import {
   useContractCall,
   CallContractTransactionInput,
   NetworkId,
-} from '../src'
+} from '../../src'
 
 interface Props {
   value: CallContractTransactionInput

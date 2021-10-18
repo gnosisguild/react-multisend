@@ -7,7 +7,7 @@ import {
   TransactionInput,
   TransactionType,
   useMultiSendContext,
-} from '../src'
+} from '../../src'
 import { CallContract } from './CallContract'
 import { RawTransaction } from './RawTransaction'
 import { TransferCollectible } from './TransferCollectible'
@@ -93,7 +93,7 @@ interface ContentProps {
   classNames: ClassNames
 }
 
-const TransactionContent: React.FC<ContentProps> = ({ value, onChange }) => {
+const TransactionBody: React.FC<ContentProps> = ({ value, onChange }) => {
   const { network, blockExplorerApiKey } = useMultiSendContext()
   switch (value.type) {
     case TransactionType.callContract:
@@ -167,7 +167,7 @@ export const Transaction: React.FC<Props> = ({
       {!collapsed && (
         <>
           <TransactionTypeSelect value={value.type} onChange={switchType} />
-          <TransactionContent
+          <TransactionBody
             value={value}
             onChange={handleChange}
             classNames={classNames}

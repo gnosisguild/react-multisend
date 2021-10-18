@@ -1,0 +1,75 @@
+---
+name: Example
+route: /example
+---
+
+import { Playground, Props } from 'docz'
+import { nanoid } from 'nanoid'
+import { TransactionBatch } from './TransactionBatch'
+import {
+  ProvideMultiSendContext,
+  createTransaction,
+  TransactionType,
+} from '../src'
+import * as classNames from './plain.module.css'
+
+# Example
+
+> You can find the full code of the components in the example below at [docs/example](https://github.com/gnosis/react-multisend/tree/main/docs/example).
+
+<Playground>
+  {() => {
+    const [batch, setBatch] = React.useState([
+      createTransaction(TransactionType.transferFunds, nanoid()),
+    ])
+    return (
+      <ProvideMultiSendContext
+        safeAddress="0x1076f084A3703E1701a1a97F837906e56370D4f9"
+        network="4"
+      >
+        <TransactionBatch
+          value={batch}
+          onChange={setBatch}
+          classNames={classNames}
+        />
+      </ProvideMultiSendContext>
+    )
+  }}
+</Playground>
+
+This example uses [dnd-kit](https://dndkit.com) for drag&drop transaction reordering.
+The component styles can be customized using css modules. The example theme can be found at [docs/example/plain.module.css].
+
+To try the example with your own Safe, simply change the `safeAddress` and `network` props in the playground code.
+
+For understanding the different moving parts, in the following sections we're going to break the example down into it's individual components, going top-down.
+
+## `<TransactionBatch>` component
+
+**Code:** [docs/example/TransactionBatch.tsx]
+
+Renders the list of `<Transaction>` elements, handles adding, removing, and updating transactions.
+Also implementes the reordering of list items using the [Sortable preset of dnd-kit](https://docs.dndkit.com/presets/sortable).
+
+## `<Transaction>` component
+
+Represents a single transaction item in the batch.
+Each item has a fixed header, with a drag handle element, a title, and a remove button.
+Clicking the title allows collapsing the transaction.
+
+The `<TransactionTypeSelect>` element allows switching between the [different transaction types](/encode#transactionTypes).
+When switching the transaction type, under the hood it will replace the entire transaction item with a fresh one created using [`createTransaction`](/api#createTransaction).
+
+The `<TransactionBody>` component's sole responsibiity is rendering the right specific component for the respective transaction type: `<TransferFunds>`, `<TransferCollectible>`, `<CallContract>`, or `<RawTransaction>`.
+
+## `<TransferFunds>`, `<AssetSelect>` and `<AmountInput>` components
+
+TODO
+
+## `<TransferCollectible>` and `<CollectibleSelect>` components
+
+TODO
+
+## `<CallContract>` component
+
+TODO

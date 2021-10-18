@@ -1,5 +1,5 @@
 import React from 'react'
-import { TransferFundsTransactionInput } from '../src'
+import { TransferFundsTransactionInput } from '../../src'
 import { AddressInput } from './AddressInput'
 import { AmountInput } from './AmountInput'
 import { AssetSelect } from './AssetSelect'

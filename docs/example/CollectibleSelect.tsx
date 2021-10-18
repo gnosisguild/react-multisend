@@ -1,5 +1,5 @@
 import React from 'react'
-import { Collectible, useSafeCollectibles } from '../src'
+import { Collectible, useSafeCollectibles } from '../../src'
 
 type CollectibleInput = {
   address: string // ERC721 token contract address

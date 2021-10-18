@@ -1,6 +1,6 @@
 import { formatUnits } from '@ethersproject/units'
 import React from 'react'
-import { useSafeBalances } from '../src'
+import { useSafeBalances } from '../../src'
 
 type Props = {
   token: string | null // ERC20 token contract address, `null` for ETH

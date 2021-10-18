@@ -53,6 +53,10 @@ TODO
 
 TODO
 
+### `<ProvideMultiSendContext>`
+
+TODO
+
 ### <a name="encodeMultiSend"></a>`encodeMultiSend`
 
 TODO

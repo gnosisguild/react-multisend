@@ -1,5 +1,5 @@
 import React from 'react'
-import { RawTransactionInput } from '../src'
+import { RawTransactionInput } from '../../src'
 import { AddressInput } from './AddressInput'
 
 interface Props {

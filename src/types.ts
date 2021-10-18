@@ -10,6 +10,7 @@ export enum TransactionType {
   callContract = 'callContract',
   raw = 'raw',
 }
+
 export interface CallContractTransactionInput {
   type: TransactionType.callContract
   id: string // not relevant for encoding the final transaction
@@ -50,13 +51,12 @@ export type TransactionInput =
   | TransferCollectibleTransactionInput
   | RawTransactionInput
 
-/// Types from @gnosis.pm/safe-core-sdk-types
 export enum OperationType {
-  Call, // 0
-  DelegateCall, // 1
+  Call = 0,
+  DelegateCall = 1,
 }
 
-export interface MetaTransactionData {
+export interface MetaTransaction {
   readonly to: string
   readonly value: string
   readonly data: string

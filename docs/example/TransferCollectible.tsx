@@ -1,5 +1,5 @@
 import React from 'react'
-import { TransferCollectibleTransactionInput } from '../src'
+import { TransferCollectibleTransactionInput } from '../../src'
 import { AddressInput } from './AddressInput'
 import { CollectibleSelect } from './CollectibleSelect'
 
