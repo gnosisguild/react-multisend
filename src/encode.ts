@@ -14,7 +14,7 @@ const MULTI_SEND_ABI = ['function multiSend(bytes memory transactions)']
 const MULTI_SEND_CONTRACT_ADDRESS = '0x8D29bE29923b68abfDD21e541b9374737B49cdAD'
 
 const defaultValue = (paramType: ParamType) => {
-  return '' // TODO
+  return paramType.name // TODO
 }
 
 const encodeFunctionCall = (tx: CallContractTransactionInput) => {
