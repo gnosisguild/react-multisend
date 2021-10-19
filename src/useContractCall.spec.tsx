@@ -73,7 +73,10 @@ describe('useContractCall', () => {
   it('should return state updating functions only', () => {
     const { getAllByRole, queryByText } = render(
       <TestComponent
-        value={{ ...createTransaction(TransactionType.callContract), abi: TEST_CONTRACT_ABI }}
+        value={{
+          ...createTransaction(TransactionType.callContract),
+          abi: TEST_CONTRACT_ABI,
+        }}
         onChange={jest.fn()}
         network="4"
       />
@@ -89,7 +92,10 @@ describe('useContractCall', () => {
     const { rerender } = render(
       <TestComponent
         network="4"
-        value={{ ...createTransaction(TransactionType.callContract), abi: TEST_CONTRACT_ABI }}
+        value={{
+          ...createTransaction(TransactionType.callContract),
+          abi: TEST_CONTRACT_ABI,
+        }}
         onChange={onChange}
       />
     )
@@ -182,7 +188,10 @@ describe('useContractCall', () => {
     const { queryByText, getByText, rerender } = render(
       <TestComponent
         network="4"
-        value={{ ...createTransaction(TransactionType.callContract), abi: TEST_CONTRACT_ABI }}
+        value={{
+          ...createTransaction(TransactionType.callContract),
+          abi: TEST_CONTRACT_ABI,
+        }}
         onChange={jest.fn()}
       />
     )
@@ -207,7 +216,7 @@ describe('useContractCall', () => {
       <TestComponent
         network="4"
         value={{
-          ...createTransaction(TransactionType.callContract)
+          ...createTransaction(TransactionType.callContract),
           abi: TEST_CONTRACT_ABI,
           functionSignature: 'changeOwner(address)',
         }}

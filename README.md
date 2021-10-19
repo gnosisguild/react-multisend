@@ -9,16 +9,16 @@ On the user interface level, this requires components for creating and displayin
 
 ## This solution
 
-This library offers a set of hooks and utility functions for building React components that allow users to craft transactions to be sent from a given Gnosis Safe:
+This library offers a set of hooks and utility functions for building React components that allow users to craft transactions for execution from a Gnosis Safe:
 
 - [useSafeBalances](#useSafeBalances) for listing a Gnosis Safe's ETH and ERC20 balances
 - [useSafeCollectibles](#useSafeCollectibles) for listing a Gnosis Safe's NFT holdings
 - [useContractCall](#useContractCall) for querying contract ABIs and managing input values for contract function calls
-- [encodeMultiSend](#encodeMultiSend) for encoding a set of transactions into a multi-send transaction batch
+- [encodeMulti](#encodeMulti) for encoding a set of transactions into a multi-send transaction batch
 
 Rather than offering ready-to-use UI components, react-multisend is a toolkit of primitives enabling developers of DAO tools to build user interfaces using their own UX patterns and design system components.
 
-## Examples
+## Docs & example application
 
 For examples on how to use the hooks, check out our [documentation](https://gnosis.github.io/react-multisend/).
 These example components are a good starting point for creating your own components.

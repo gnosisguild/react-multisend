@@ -1,0 +1,38 @@
+---
+name: Overview
+route: /overview
+---
+
+> A headless React library for crafting multi-send transactions from a Gnosis Safe
+
+## The problem
+
+DAO governance proposals typically include a set of transactions, which can be encoded into a single multi-send transaction for execution from the DAO's Gnosis Safe when the vote passes.
+On the user interface level, this requires components for creating and displaying batches of arbitrary transactions in an easy and understandable way.
+
+## This solution
+
+This library offers a set of hooks and utility functions for building React components that allow users to craft transactions for execution from a Gnosis Safe:
+
+- [useSafeBalances](#useSafeBalances) for listing a Gnosis Safe's ETH and ERC20 balances
+- [useSafeCollectibles](#useSafeCollectibles) for listing a Gnosis Safe's NFT holdings
+- [useContractCall](#useContractCall) for querying contract ABIs and managing input values for contract function calls
+- [encodeSingle](#encodeSingle) and [encodeMulti](#encodeMulti) for encoding a set of transactions into a multi-send transaction batch
+
+Rather than offering ready-to-use UI components, react-multisend is a toolkit of primitives enabling developers of DAO tools to build user interfaces using their own UX patterns and design system components.
+
+## Getting started
+
+For building your own multi-send components we recommend using our [example components](https://github.com/gnosis/react-multisend/tree/main/docs/example) as a starting point.
+Copy them to your project and adjust the code according to your needs.
+The example components rely on the following dependencies, make sure to add them to your project:
+
+- `react-multisend`
+- `@dnd-kit/core`, `@dnd-kit/modifiers`, `@dnd-kit/sortable`
+- `nanoid`
+
+You can see the [live example](/example) in the following section.
+
+In the [Usage](/usage) section we will go into more detail on how to best use the primitives provided by the library.
+
+Refer to the [API](/api) section as a quick reference to everything the react-multisend package offers.

@@ -1,0 +1,236 @@
+---
+name: Usage
+route: /usage
+---
+
+import { Props } from 'docz'
+import { useSafeBalances, encodeSingle, encodeMulti } from '../src'
+
+# Usage
+
+## Installation
+
+This module is distributed via npm. For adding it to your project, run:
+
+```
+npm install --save react-multisend
+```
+
+To install it using yarn, run:
+
+```
+yarn add react-multisend
+```
+
+This package also depends on `react`. Please make sure you have it installed as well.
+
+## Transfer funds and collectibles
+
+When building UI components for defining token transfer transactions it is useful to present a list of tokens held by the Gnosis Safe as the designated sender.
+The library offers two hooks to make that easy.
+Both hooks take the same props as an argument, defining the Gnosis Safe instance to connect to and whether to fetch the information directly or only upon request.
+
+#### Props
+
+|         |           |                                                                         |
+| ------- | --------- | ----------------------------------------------------------------------- |
+| address | `string`  | The address of the Gnosis Safe                                          |
+| network | `string`  | The ID of the chain on which the Gnosis Safe lives                      |
+| lazy    | `boolean` | When set to `true` it won't fetch until the `fetch` callback is invoked |
+
+### `useSafeBalances` hook
+
+This hook provides information about the Gnosis Safe's balances of ETH and ERC20 tokens.
+
+```ts
+const [balances, { loading, error, fetch }] = useSafeBalances({
+  address,
+  network,
+  lazy,
+})
+```
+
+#### Return value
+
+The first item in the tuple is the list of `Balance` objects, one for each ERC20 token held by the Safe and one representing the ETH balance.
+The ETH balance is identified with `null` values for the `token` and `tokenAddress` fields.
+
+Example:
+
+```json
+[
+  { "tokenAddress": null, "token": null, "balance": "100000000000000000" },
+  {
+    "tokenAddress": "0xa7D1C04fAF998F9161fC9F800a99A809b84cfc9D",
+    "token": {
+      "name": "OWL Token",
+      "symbol": "OWL",
+      "decimals": 18,
+      "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/0xa7D1C04fAF998F9161fC9F800a99A809b84cfc9D.png"
+    },
+    "balance": "100000000000000000000"
+  },
+  {
+    "tokenAddress": "0xc778417E063141139Fce010982780140Aa0cD5Ab",
+    "token": {
+      "name": "Wrapped Ether",
+      "symbol": "WETH",
+      "decimals": 18,
+      "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/0xc778417E063141139Fce010982780140Aa0cD5Ab.png"
+    },
+    "balance": "1000000000000000000"
+  }
+]
+```
+
+The second item in the return tuple is an object that provides the request state for fetching the balances:
+
+|         |                   |                                                                  |
+| ------- | ----------------- | ---------------------------------------------------------------- |
+| loading | `boolean`         | Indicates whether the request is currently running               |
+| error   | `Error` or `null` | If the request failed, this field will provide error information |
+| fetch   | `function`        | Callback for triggering the request                              |
+
+### `useSafeCollectibles` hook
+
+This hook provides information about NFTs (ERC-721 token) held in the Gnosis Safe.
+
+```ts
+const [collectibles, { loading, error, fetch }] = useSafeCollectibles({
+  address,
+  network,
+  lazy,
+})
+```
+
+#### Return value
+
+The first item in the tuple is the list of `Collectible` objects, one for each NFT held by the Safe. Example:
+
+```json
+[
+  {
+    "address": "0x16542D57057Ee50C6FA7d95b44b7eC5a1ab0B410",
+    "tokenName": "Ben's NFT Store",
+    "tokenSymbol": "ETH",
+    "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/0x16542D57057Ee50C6FA7d95b44b7eC5a1ab0B410.png",
+    "id": "12",
+    "uri": "https://arweave.net/1LPEBm4iiG5PhUcNqnee2WeLn-fPq9mbT6sfBZAOSGQ",
+    "name": "Sam",
+    "description": "Tokenized Image of Sam A",
+    "imageUri": "https://arweave.net/xRCOWRmpjlVzqboTN-VV6RYqad1PtyZwjv6tUrq2mn0",
+    "metadata": {
+      "minter": "0x7f01d9b227593e033bf8d6fc86e634d27aa85568",
+      "mintedOn": "2021-09-30T07:36:55.021Z",
+      "name": "Sam",
+      "description": "Tokenized Image",
+      "category": "DuNvaKK8KICzyMuTex2F",
+      "type": "ERC721"
+    }
+  }
+]
+```
+
+The second item in the return tuple is an object that provides the request state for fetching the list of collectibles:
+
+|         |                   |                                                                  |
+| ------- | ----------------- | ---------------------------------------------------------------- |
+| loading | `boolean`         | Indicates whether the request is currently running               |
+| error   | `Error` or `null` | If the request failed, this field will provide error information |
+| fetch   | `function`        | Callback for triggering the request                              |
+
+## Arbitrary contract calls
+
+### `useContractCall` hook
+
+This hook fetches smart contract interface information from Etherscan or the respective block explorers of other chains.
+
+```ts
+const { functions, inputs, payable, loading } = useContractCall({
+  value,
+  onChange,
+  network,
+  blockExplorerApiKey,
+})
+```
+
+It reads and updates a `CallContractTransactionInput` value, which has the following fields:
+
+```ts
+{
+  to: string // contract address
+  value: string // amount of wei to send
+  abi: string // contract interface ABI as JSON string
+  functionSignature: string // function to call
+  inputValues: { [key: string]: ValueType } // values to pass as input parameters with the function call
+}
+```
+
+#### Props
+
+|                     |                                               |                                                                                 |
+| ------------------- | --------------------------------------------- | ------------------------------------------------------------------------------- |
+| value               | `CallContractTransactionInput`                | The contract call transaction input from state                                  |
+| onChange            | `(value: CallContractTransactionInput): void` | The handler prop for updating the transaction input in the state                |
+| network             | `string`                                      | The ID of the chain on which the Gnosis Safe lives                              |
+| blockExplorerApiKey | `string`                                      | (optional) An API key for Etherscan or the block explorer for the given network |
+
+#### Return value
+
+|           |                      |                                                                                                                                   |
+| --------- | -------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| functions | `ContractFunction[]` | All state updating functions of the contract                                                                                      |
+| inputs    | `Input[]`            | For each parameter of the currently selected function, it contains an object with type information and the input value from state |
+| payable   | `boolean`            | Indicates whether the currently selected function is payable                                                                      |
+| loading   | `boolean`            | Indicates whether the request is currently running                                                                                |
+
+## Encode for execution
+
+<a name="transactionType"></a>
+The library supports defining transactions of four different kinds:
+
+|                                       |                                                                             |
+| ------------------------------------- | --------------------------------------------------------------------------- |
+| `TransactionType.transferFunds`       | Transfer an amount of ETH or any ERC20 token                                |
+| `TransactionType.transferCollectible` | Transfer a non-fungible token (NFT)                                         |
+| `TransactionType.callContract`        | Call a verified contract by selecting a function and providing input values |
+| `TransactionType.raw`                 | Any other transaction can be defined by provided the raw encoded data       |
+
+Each of these types comes with its own JSON structure for storing transaction inputs.
+You can find the corresponding interfaces at: [src/types.ts](https://github.com/gnosis/react-multisend/blob/main/src/types.ts)
+
+The `TransactionInput` JSON structure is not directly useful for execution but needs to be mapped to the `MetaTransaction` type used by Gnosis Safe to represent transactions.
+The library offers two functions, `encodeSingle` and `encodeMulti`, that are combined to achieve this.
+
+```ts
+encodeSingle(transactionInput: TransactionInput): MetaTransaction
+```
+
+The first step of encoding a list of transaction inputs into an executable format is provided by the `encodeSingle` function.
+It turns a `TransactionInput` object into a `MetaTransaction`, i.e., a representation with an ABI encoded `data` field.
+
+```ts
+encodeMulti(metaTransaction: MetaTransaction): MetaTransaction
+```
+
+The second step takes an array of `MetaTransaction` objects, and encodes it into a single `MetaTransaction` object describing the call to the `MultiSend` contract where the individual transactions are packed encoded into `data`.
+This is implemented in the [`encodeMulti`](/api/encodeMulti) function.
+
+### Example
+
+```ts
+import { isValid, encodeSingle, encodeMulti } from 'react-multisend'
+
+if (transactionInputs.every(isValid)) {
+  const multiSendTransaction = encodeMulti(transactionInputs.map(encodeSingle))
+}
+```
+
+There are various options for executing a multi-send transaction encoded this way:
+
+- from any enabled Safe/Zodiac module via `executeTransactionFromModule` (see: [Zodiac Module base contract](https://github.com/gnosis/zodiac/blob/master/contracts/core/Module.sol#L43))
+- directly by calling the Safe's `execTransaction` function, providing the required owner signatures ([learn more](https://docs.gnosis.io/safe/docs/contracts_tx_execution/))
+- collecting the required signatures on-chain, by calling `approveHash` upfront ([learn more](https://docs.gnosis.io/safe/docs/contracts_tx_execution/#on-chain-approvals))
+- collecting the required signatures off-chain, by proposing the transaction using the [Safe Transaction Service](https://docs.gnosis.io/safe/docs/tutorial_tx_service_initiate_sign/)
+
+Check out the [@gnosis.pm/safe-core-sdk](https://github.com/gnosis/safe-core-sdk/tree/main/packages/safe-core-sdk) package for interacting with the Gnosis Safe contracts and the [@gnosis.pm/safe-service-client](https://github.com/gnosis/safe-core-sdk/tree/main/packages/safe-service-client) package for using the Safe Transaction Service from JavaScript apps.

@@ -29,6 +29,9 @@ const SafeCollectiblesContext =
   createContext<HookReturnValue<Collectible> | null>(null)
 
 type Props = {
+  /**
+   * This is a pretty good description for the address prop.
+   */
   address: string
   network: NetworkId
   lazy?: boolean

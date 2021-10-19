@@ -17,6 +17,8 @@ import * as classNames from './example/plain.module.css'
 
 > You can find the full code of the components in the example below at [docs/example](https://github.com/gnosis/react-multisend/tree/main/docs/example).
 
+This is an interactive example user interface for creating multi-send transactions.
+
 <Playground>
   {() => {
     const [batch, setBatch] = React.useState([
@@ -37,39 +39,49 @@ import * as classNames from './example/plain.module.css'
   }}
 </Playground>
 
-This example uses [dnd-kit](https://dndkit.com) for drag&drop transaction reordering.
-The component styles can be customized using css modules. The example theme can be found at [docs/example/plain.module.css].
+> To try the example with your own Safe, simply change the values of the `safeAddress` and `network` props in the code playground above.
 
-To try the example with your own Safe, simply change the `safeAddress` and `network` props in the playground code.
+This example uses [dnd-kit](https://dndkit.com) for drag & drop transaction reordering.
+The component styles can be customized using css modules. The example theme can be found at [docs/example/plain.module.css](https://github.com/gnosis/react-multisend/blob/main/docs/example/plain.module.css).
 
-For understanding the different moving parts, in the following sections we're going to break the example down into it's individual components, going top-down.
+For understanding the different moving parts, in the following sections we're going to break the example down into its individual components, going top-down.
 
-## `<TransactionBatch>` component
+## `<TransactionBatch>`
 
-**Code:** [docs/example/TransactionBatch.tsx]
+> **Code:** [docs/example/TransactionBatch.tsx](https://github.com/gnosis/react-multisend/blob/main/docs/example/TransactionBatch.tsx)
 
 Renders the list of `<Transaction>` elements, handles adding, removing, and updating transactions.
-Also implementes the reordering of list items using the [Sortable preset of dnd-kit](https://docs.dndkit.com/presets/sortable).
+Also implements the reordering of list items using the [Sortable preset of dnd-kit](https://docs.dndkit.com/presets/sortable).
 
-## `<Transaction>` component
+## `<Transaction>`
 
 Represents a single transaction item in the batch.
 Each item has a fixed header, with a drag handle element, a title, and a remove button.
 Clicking the title allows collapsing the transaction.
 
-The `<TransactionTypeSelect>` element allows switching between the [different transaction types](/encode#transactionTypes).
+The `<TransactionTypeSelect>` element allows switching between the [different transaction types](/usage#transactionType).
 When switching the transaction type, under the hood it will replace the entire transaction item with a fresh one created using [`createTransaction`](/api#createTransaction).
 
-The `<TransactionBody>` component's sole responsibiity is rendering the right specific component for the respective transaction type: `<TransferFunds>`, `<TransferCollectible>`, `<CallContract>`, or `<RawTransaction>`.
+The `<TransactionBody>` component's sole responsibility is rendering the right specific component for the respective transaction type: `<TransferFunds>`, `<TransferCollectible>`, `<CallContract>`, or `<RawTransaction>`.
 
-## `<TransferFunds>`, `<AssetSelect>` and `<AmountInput>` components
+## `<TransferFunds>`
 
-TODO
+> **Code:** [docs/example/TransferFunds.tsx](https://github.com/gnosis/react-multisend/blob/main/docs/example/TransferFunds.tsx)
 
-## `<TransferCollectible>` and `<CollectibleSelect>` components
+The component renders an `<AssetSelect>` ([code](https://github.com/gnosis/react-multisend/blob/main/docs/example/AssetSelect.tsx)) input, which lists all ERC20 tokens that the Safe holds a balance of.
+This information is provided by the [`useSafeBalances` hook](/usage#usesafebalances-hook).
 
-TODO
+The same hook also powers the `<AmountInput>` ([code](https://github.com/gnosis/react-multisend/blob/main/docs/example/AmountInput.tsx)) component. Here the Safe's balance of the selected token is used to control the maximum amount the user will be able to enter.
 
-## `<CallContract>` component
+## `<TransferCollectible>`
 
-TODO
+> **Code"** [docs/example/TransferCollectible.tsx](https://github.com/gnosis/react-multisend/blob/main/docs/example/TransferCollectible.tsx)
+
+The most notable component here is `<CollectibleSelect>` ([code](https://github.com/gnosis/react-multisend/blob/main/docs/example/CollectibleSelect.tsx)) which uses the [`useSafeCollectibles` hook](/usage#usesafebalances-hook) to render a select input with all collectibles held in the Safe.
+Collectibles are grouped by their token contracts.
+
+## `<CallContract>`
+
+> **Code:** [docs/example/CallContract.tsx](https://github.com/gnosis/react-multisend/blob/main/docs/example/CallContract.tsx)
+
+This component is powered by the `useContractCall` hook, which provides the contract interface information necessary for rendering input elements for all parameters of the selected contract function.

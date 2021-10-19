@@ -3,14 +3,73 @@ name: API
 route: /api
 ---
 
-TODO
-
 # API
 
-## `useSafeBalances`
+## useSafeBalances
 
-## `useSafeCollectibles`
+```ts
+const [balances, { loading, error, fetch }] = useSafeBalances(props: {
+  address: string
+  network: NetworkId
+  lazy?: boolean
+})
+```
 
-## `useContractCall`
+## useSafeCollectibles
 
-...
+```ts
+const [collectibles, { loading, error, fetch }] = useSafeCollectibles(props: {
+  address: string
+  network: NetworkId
+  lazy?: boolean
+})
+```
+
+## useContractCall
+
+```ts
+const { functions, payable, inputs, loading } = useContractCall(props: {
+  value: CallContractTransactionInput
+  onChange(value: CallContractTransactionInput): void
+  network: NetworkId
+  blockExplorerApiKey?: string
+})
+```
+
+## ProvideMultiSendContext
+
+```tsx
+let props: {
+  network: string
+  safeAddress: string
+  blockExplorerApiKey?: string
+  lazy?: boolean
+}
+;<ProvideMultiSendContext {...props}>
+  {/* provides the passed props values to the hooks used in children */}
+</ProvideMultiSendContext>
+```
+
+## useMultiSendContext
+
+```ts
+useMultiSendContext(): { network: string, safeAddress: string }
+```
+
+## createTransaction
+
+```ts
+createTransaction(type: TransactionType, id?: string): TransactionInput
+```
+
+## encodeSingle
+
+```ts
+encodeSingle(transactionInput: TransactionInput): MetaTransaction
+```
+
+## encodeMulti
+
+```ts
+encodeMulti(metaTransaction: MetaTransaction): MetaTransaction
+```
