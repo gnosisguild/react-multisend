@@ -1,5 +1,8 @@
 import React from 'react'
-import { TransferCollectibleTransactionInput } from '../../src'
+import {
+  TransferCollectibleTransactionInput,
+  useMultiSendContext,
+} from '../../src'
 import { AddressInput } from './AddressInput'
 import { CollectibleSelect } from './CollectibleSelect'
 
@@ -9,6 +12,7 @@ type Props = {
 }
 
 export const TransferCollectible: React.FC<Props> = ({ value, onChange }) => {
+  const { safeAddress } = useMultiSendContext()
   return (
     <fieldset>
       <label>
@@ -16,7 +20,7 @@ export const TransferCollectible: React.FC<Props> = ({ value, onChange }) => {
         <CollectibleSelect
           value={{ address: value.address, tokenId: value.tokenId }}
           onChange={(ev, { address, tokenId }) =>
-            onChange({ ...value, address, tokenId })
+            onChange({ ...value, address, tokenId, from: safeAddress })
           }
         />
       </label>

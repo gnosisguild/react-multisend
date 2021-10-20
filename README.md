@@ -38,36 +38,3 @@ yarn add react-multisend
 ```
 
 This package also depends on `react`. Please make sure you have it installed as well.
-
-## Usage
-
-### <a name="useSafeBalances"></a>`useSafeBalances`
-
-TODO
-
-### <a name="useSafeCollectibles"></a>`useSafeCollectibles`
-
-TODO
-
-### <a name="useContractCall"></a>`useContractCall`
-
-TODO
-
-### `<ProvideMultiSendContext>`
-
-TODO
-
-### <a name="encodeMultiSend"></a>`encodeMultiSend`
-
-TODO
-
-TODO: get transaction hash
-
-There are various options for executing a multi-send transaction encoded this way:
-
-- from any enabled Safe / Zodiac module via `executeTransactionFromModule` (see: [Zodiac Module base contract](https://github.com/gnosis/zodiac/blob/master/contracts/core/Module.sol#L43))
-- directly by calling the Safe's `execTransaction` function, providing the required owner signatures ([learn more](https://docs.gnosis.io/safe/docs/contracts_tx_execution/))
-- collecting the required signatures on-chain, by calling `approveHash` upfront ([learn more](https://docs.gnosis.io/safe/docs/contracts_tx_execution/#on-chain-approvals))
-- collecting the required signatures off-chain, by proposing the transaction using the [Safe Transaction Service](https://docs.gnosis.io/safe/docs/tutorial_tx_service_initiate_sign/)
-
-Check out the [@gnosis.pm/safe-core-sdk](https://github.com/gnosis/safe-core-sdk/tree/main/packages/safe-core-sdk) package for interacting with the Gnosis Safe contracts and the [@gnosis.pm/safe-service-client](https://github.com/gnosis/safe-core-sdk/tree/main/packages/safe-service-client) package for using the Safe Transaction Service from JavaScript apps.

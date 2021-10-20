@@ -35,6 +35,7 @@ export interface TransferCollectibleTransactionInput {
   address: string // ERC721 contract address
   tokenId: string // ID of the NFT
   to: string // address of recipient
+  from: string // address of sender
 }
 
 export interface RawTransactionInput {
@@ -42,7 +43,7 @@ export interface RawTransactionInput {
   id: string // not relevant for encoding the final transaction
   to: string // target address
   value: string // amount of wei to send
-  data: string // TODO how does it need to be encoded
+  data: string // ABI encoded data
 }
 
 export type TransactionInput =

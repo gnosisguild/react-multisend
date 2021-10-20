@@ -149,6 +149,7 @@ export const useContractCall = ({
   const selectedFunctionExists = !!selectedFunction
   const firstFunctionSignature = functions[0]?.signature || ''
 
+  // set selection to first function if the provided functionSignature does not exist
   useEffect(() => {
     if (!selectedFunctionExists) {
       onChangeRef.current({
@@ -160,6 +161,17 @@ export const useContractCall = ({
 
   const payable = selectedFunction?.payable || false
   const inputTypes = selectedFunction?.inputs
+
+  // reset value field when switching to a non-payable function
+  useEffect(() => {
+    const { value } = valueRef.current
+    if (!payable && value !== '' && value !== '0') {
+      onChangeRef.current({
+        ...valueRef.current,
+        value: '',
+      })
+    }
+  }, [payable])
 
   const inputs = useMemo(
     () =>

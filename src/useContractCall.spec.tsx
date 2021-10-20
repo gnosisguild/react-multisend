@@ -27,7 +27,7 @@ describe('useContractCall', () => {
         {payable && <span>payable</span>}
         <ul data-testid="functions">
           {functions.map((f) => (
-            <li>{f.name}</li>
+            <li key={f.signature}>{f.name}</li>
           ))}
         </ul>
         {inputs && (
@@ -182,6 +182,39 @@ describe('useContractCall', () => {
       />
     )
     expect(getAllByRole('textbox')).toHaveLength(1)
+  })
+
+  it('should reset the value when switching from a payable to a non-payable function', () => {
+    const onChange = jest.fn()
+    const { rerender } = render(
+      <TestComponent
+        network="4"
+        value={{
+          ...createTransaction(TransactionType.callContract),
+          abi: TEST_CONTRACT_ABI,
+          functionSignature: 'pay(int256)',
+          value: '1000',
+        }}
+        onChange={onChange}
+      />
+    )
+
+    rerender(
+      <TestComponent
+        network="4"
+        value={{
+          ...createTransaction(TransactionType.callContract),
+          abi: TEST_CONTRACT_ABI,
+          functionSignature: 'changeOwner(address)',
+          value: '1000',
+        }}
+        onChange={onChange}
+      />
+    )
+
+    expect(onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ value: '' })
+    )
   })
 
   it('should indicate when ABI is being fetched', async () => {

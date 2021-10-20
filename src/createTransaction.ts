@@ -21,10 +21,14 @@ export const createTransaction = <T extends TransactionType>(
         { type: T }
       >
     case TransactionType.transferCollectible:
-      return { type, id, address: '', tokenId: '', to: '' } as Extract<
-        TransactionInput,
-        { type: T }
-      >
+      return {
+        type,
+        id,
+        address: '',
+        tokenId: '',
+        to: '',
+        from: '',
+      } as Extract<TransactionInput, { type: T }>
     case TransactionType.raw:
       return { type, id, to: '', value: '', data: '' } as Extract<
         TransactionInput,
