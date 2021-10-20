@@ -1,17 +1,19 @@
 import {
-  render,
-  waitForElementToBeRemoved,
   fireEvent,
+  render,
   waitFor,
+  waitForElementToBeRemoved,
 } from '@testing-library/react'
 import { ethers } from 'ethers'
 import React from 'react'
+
 import {
   ProvideSafeBalances,
   ProvideSafeCollectibles,
   useSafeBalances,
   useSafeCollectibles,
 } from '../src/safeHooks'
+
 import { NetworkId } from './safe'
 
 const TEST_SAFE = {

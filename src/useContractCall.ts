@@ -5,14 +5,15 @@ import {
   ParamType,
 } from '@ethersproject/abi'
 import { getAddress } from '@ethersproject/address'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { NetworkId } from './safe'
 import {
   CallContractTransactionInput,
+  createTransaction,
   TransactionType,
   ValueType,
-} from './types'
-import { createTransaction } from './createTransaction'
+} from 'ethers-multisend'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+
+import { NetworkId } from './safe'
 
 const EXPLORER_API_URLS = {
   '1': 'https://api.etherscan.io/api',

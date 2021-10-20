@@ -1,8 +1,10 @@
-import { Interface, FormatTypes } from '@ethersproject/abi'
+import { FormatTypes, Interface } from '@ethersproject/abi'
 import { render, waitForElementToBeRemoved } from '@testing-library/react'
 import React from 'react'
-import { createTransaction, TransactionType } from '.'
+
 import { Props, useContractCall } from './useContractCall'
+
+import { createTransaction, TransactionType } from '.'
 
 const TEST_CONTRACT_ADDRESS = '0x68970a60fbc4274e1c604efd6e55d700cd0f140c'
 const TEST_CONTRACT_ABI = new Interface([

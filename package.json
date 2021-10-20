@@ -26,7 +26,8 @@
     "start": "docz dev"
   },
   "dependencies": {
-    "ethers": "^5.4.7"
+    "ethers": "^5.4.7",
+    "ethers-multisend": "^1.0.2"
   },
   "devDependencies": {
     "@dnd-kit/core": "^4.0.0",
