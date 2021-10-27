@@ -67,7 +67,17 @@ const TransactionHeader: React.FC<HeaderProps> = ({
   }
 
   return (
-    <div className={classNames.transactionHeader} onClick={onClick}>
+    <div
+      className={classNames.transactionHeader}
+      onClick={onClick}
+      role="button"
+      tabIndex={-1}
+      onKeyPress={(ev) => {
+        if (ev.key === 'Enter') {
+          onClick()
+        }
+      }}
+    >
       <button
         className={classNames.dragHandle}
         title="drag to move"
