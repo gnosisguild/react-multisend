@@ -62,6 +62,14 @@ useMultiSendContext(): { network: string, safeAddress: string }
 createTransaction(type: TransactionType, id?: string): TransactionInput
 ```
 
+## isValid
+
+```ts
+isValid(transactionInput: TransactionInput): boolean
+```
+
+Returns whether the provided transaction input can be encoded into a meta transaction without errors and has a valid `to` address.
+
 ## encodeSingle
 
 ```ts

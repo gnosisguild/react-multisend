@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { TransactionType } from '../../src'
 
 interface Props {
@@ -14,10 +15,12 @@ export const TransactionTypeSelect: React.FC<Props> = ({ value, onChange }) => {
         value={value}
         onChange={(ev) => onChange(ev.target.value as TransactionType)}
       >
-        <option value="transferFunds">Transfer funds</option>
-        <option value="transferCollectible">Transfer collectible</option>
-        <option value="callContract">Call contract</option>
-        <option value="raw">Raw transaction</option>
+        <option value={TransactionType.transferFunds}>Transfer funds</option>
+        <option value={TransactionType.transferCollectible}>
+          Transfer collectible
+        </option>
+        <option value={TransactionType.callContract}>Call contract</option>
+        <option value={TransactionType.raw}>Raw transaction</option>
       </select>
     </label>
   )

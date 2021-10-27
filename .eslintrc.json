@@ -23,6 +23,8 @@
     "sort-imports": [
       "error",
       { "ignoreDeclarationSort": true, "ignoreCase": true }
-    ]
+    ],
+    "jsx-a11y/no-onchange": "off", // this rule is deprecated, but somehow still part of jsx-a11y/recommended
+    "jsx-a11y/label-has-associated-control": "off" // this rule gives false positives when the control lives in the component of a child element
   }
 }

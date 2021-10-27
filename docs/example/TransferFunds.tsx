@@ -1,5 +1,7 @@
 import React from 'react'
+
 import { TransferFundsTransactionInput } from '../../src'
+
 import { AddressInput } from './AddressInput'
 import { AmountInput } from './AmountInput'
 import { AssetSelect } from './AssetSelect'
@@ -16,7 +18,9 @@ export const TransferFunds: React.FC<Props> = ({ value, onChange }) => {
         <span>Asset</span>
         <AssetSelect
           value={value.token}
-          onChange={(ev, token) => onChange({ ...value, token })}
+          onChange={(ev, token, decimals) =>
+            onChange({ ...value, token, decimals })
+          }
         />
       </label>
       <label>

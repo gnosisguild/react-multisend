@@ -1,5 +1,6 @@
 import { formatUnits } from '@ethersproject/units'
 import React from 'react'
+
 import { useSafeBalances } from '../../src'
 
 type Props = {
@@ -24,7 +25,6 @@ export const AmountInput: React.FC<Props> = ({ token, value, onChange }) => {
         // don't allow sending more than the Avatar holds
         balance && formatUnits(balance.balance, decimals)
       }
-      // step={formatUnits(1, decimals)}
       onChange={(ev) => {
         onChange(ev, ev.target.value)
       }}

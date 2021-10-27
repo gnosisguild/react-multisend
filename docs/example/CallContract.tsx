@@ -1,11 +1,13 @@
 import React from 'react'
-import { AbiFormat, AbiInput } from './AbiInput'
-import { AddressInput } from './AddressInput'
+
 import {
-  useContractCall,
   CallContractTransactionInput,
   NetworkId,
+  useContractCall,
 } from '../../src'
+
+import { AbiFormat, AbiInput } from './AbiInput'
+import { AddressInput } from './AddressInput'
 
 interface Props {
   value: CallContractTransactionInput
@@ -38,7 +40,7 @@ export const CallContract: React.FC<Props> = (props) => {
       <label>
         <span>Method</span>
         <select
-          disabled={loading}
+          disabled={loading || !value.abi}
           value={value.functionSignature}
           onChange={(ev) =>
             onChange({

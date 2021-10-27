@@ -1,4 +1,5 @@
-import { BigNumber } from 'ethers'
+import { getAddress } from '@ethersproject/address'
+import { BigNumber } from '@ethersproject/bignumber'
 
 const API_BASE = {
   '1': 'https://safe-transaction.gnosis.io/api/v1',
@@ -19,7 +20,9 @@ const fetchFromSafeApi = async (
   endpoint: 'balances' | 'collectibles'
 ) => {
   const apiBase = API_BASE[networkId]
-  const response = await fetch(`${apiBase}/safes/${safeAddress}/${endpoint}/`)
+  const response = await fetch(
+    `${apiBase}/safes/${getAddress(safeAddress)}/${endpoint}/`
+  )
   if (!response.ok) {
     throw Error(response.statusText)
   }

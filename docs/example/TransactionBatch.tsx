@@ -1,25 +1,27 @@
-import React from 'react'
 import {
-  DndContext,
   closestCenter,
+  DndContext,
+  DragEndEvent,
   KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
-  DragEndEvent,
 } from '@dnd-kit/core'
+import {
+  restrictToVerticalAxis,
+  restrictToWindowEdges,
+} from '@dnd-kit/modifiers'
 import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
-import {
-  restrictToVerticalAxis,
-  restrictToWindowEdges,
-} from '@dnd-kit/modifiers'
 import { nanoid } from 'nanoid'
+import React from 'react'
+
 import { createTransaction, TransactionInput, TransactionType } from '../../src'
+
 import { Transaction, ClassNames as TransactionClassNames } from './Transaction'
 
 interface ClassNames extends TransactionClassNames {
