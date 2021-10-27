@@ -51,7 +51,7 @@ const fetchContractAbi = async (
     module: 'contract',
     action: 'getAbi',
     address: contractAddress,
-    blockExplorerApiKey,
+    apiKey: blockExplorerApiKey,
   })
 
   const response = await fetch(`${apiUrl}?${params}`)
@@ -87,6 +87,7 @@ interface ReturnValue {
   inputs: Input[]
   functions: ContractFunction[]
   loading: boolean
+  fetchSuccess: boolean
 }
 
 export const useContractCall = ({
@@ -98,6 +99,7 @@ export const useContractCall = ({
   const { to, abi, functionSignature, inputValues } = value
 
   const [loading, setLoading] = useState(false)
+  const [fetchSuccess, setFetchSuccess] = useState(false)
 
   // create a referentially stable callback to update the ABI
   const valueRef = useRef(value)
@@ -117,6 +119,7 @@ export const useContractCall = ({
       fetchContractAbi(network, address, blockExplorerApiKey).then((abi) => {
         if (!canceled) {
           updateAbi(abi)
+          setFetchSuccess(abi !== '')
           setLoading(false)
         }
       })
@@ -195,5 +198,6 @@ export const useContractCall = ({
     payable,
     inputs,
     loading,
+    fetchSuccess,
   }
 }
