@@ -35,7 +35,7 @@ describe('useContractCall', () => {
         {inputs && (
           <form data-testid="inputs">
             {inputs.map((input) => (
-              <label>
+              <label key={input.name}>
                 <span>
                   {input.name} ({input.type})
                 </span>

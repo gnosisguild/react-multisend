@@ -51,4 +51,5 @@ export const ProvideMultiSendContext: React.FC<Props> = ({
   )
 }
 
-export const useMultiSendContext = () => useContext(MultiSendContext)
+export const useMultiSendContext = (): ContextType =>
+  useContext(MultiSendContext)

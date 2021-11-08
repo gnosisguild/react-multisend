@@ -8,9 +8,19 @@
     "ethersproject",
     "multisend",
     "Numberish",
-    "ufixed"
+    "prebuild",
+    "testid",
+    "ufixed",
+    "usesafebalances"
   ],
   "flagWords": [],
-  "ignorePaths": ["yarn.lock", "node_modules/**", "tsconfig.json"],
+  "ignorePaths": [
+    "yarn.lock",
+    "node_modules/**",
+    "tsconfig.json",
+    "build/**",
+    "coverage/**",
+    "docs/example/*.css"
+  ],
   "enableFiletypes": ["mdx"]
 }
