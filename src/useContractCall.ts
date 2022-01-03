@@ -4,6 +4,7 @@ import {
   Interface,
   ParamType,
 } from '@ethersproject/abi'
+import { Provider } from '@ethersproject/abstract-provider'
 import { getAddress } from '@ethersproject/address'
 import {
   CallContractTransactionInput,
@@ -11,6 +12,7 @@ import {
   TransactionType,
   ValueType,
 } from 'ethers-multisend'
+import detectProxyTarget from 'ethers-proxies'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { NetworkId } from './safe'
@@ -30,7 +32,10 @@ export type Props = {
   value?: CallContractTransactionInput
   onChange(value: CallContractTransactionInput): void
   network: NetworkId
-  blockExplorerApiKey?: string // Etherscan/block explorer API key
+  /** A (read-only) ethers provider that will be used for proxy contract detection */
+  provider?: Provider
+  /** The Etherscan/block explorer API key to use when fetching ABI */
+  blockExplorerApiKey?: string
 }
 
 const validateAddress = (value: string): string | null => {
@@ -41,11 +46,18 @@ const validateAddress = (value: string): string | null => {
   }
 }
 
-const fetchContractAbi = async (
-  network: NetworkId,
-  contractAddress: string,
-  blockExplorerApiKey = ''
-) => {
+interface FetchProps {
+  network: NetworkId
+  contractAddress: string
+  provider?: Provider
+  blockExplorerApiKey?: string
+}
+export const fetchContractAbi = async ({
+  network,
+  contractAddress,
+  provider,
+  blockExplorerApiKey = '',
+}: FetchProps): Promise<string> => {
   const apiUrl = EXPLORER_API_URLS[network]
   const params = new URLSearchParams({
     module: 'contract',
@@ -60,14 +72,35 @@ const fetchContractAbi = async (
   }
 
   const { result, status } = await response.json()
-  if (status === '0') {
-    console.error(`Could not fetch contract ABI: ${result}`)
-    return ''
+
+  if (status === '0' || looksLikeAProxy(result)) {
+    if (provider) {
+      // Is this a proxy contract?
+      const proxyTarget = await detectProxyTarget(contractAddress, provider)
+      return proxyTarget
+        ? await fetchContractAbi({
+            network,
+            contractAddress: proxyTarget,
+            provider,
+            blockExplorerApiKey,
+          })
+        : ''
+    } else {
+      console.warn(
+        'Pass a provider to `useContractCall` to enable proxy contract handling'
+      )
+    }
   }
 
   // bring the JSON into ethers.js canonical form
   // (so we don't trigger unnecessary updates when looking at the same ABI in different forms)
   return new Interface(result).format(FormatTypes.json) as string
+}
+
+const looksLikeAProxy = (abi: string) => {
+  const iface = new Interface(abi)
+  const signatures = Object.keys(iface.functions)
+  return signatures.length === 0
 }
 
 interface Input {
@@ -94,6 +127,7 @@ export const useContractCall = ({
   value = createTransaction(TransactionType.callContract),
   onChange,
   network,
+  provider,
   blockExplorerApiKey,
 }: Props): ReturnValue => {
   const { to, abi, functionSignature, inputValues } = value
@@ -113,10 +147,15 @@ export const useContractCall = ({
   useEffect(() => {
     let canceled = false
 
-    const address = validateAddress(to)
-    if (address) {
+    const contractAddress = validateAddress(to)
+    if (contractAddress) {
       setLoading(true)
-      fetchContractAbi(network, address, blockExplorerApiKey).then((abi) => {
+      fetchContractAbi({
+        network,
+        contractAddress,
+        provider,
+        blockExplorerApiKey,
+      }).then((abi) => {
         if (!canceled) {
           updateAbi(abi)
           setFetchSuccess(abi !== '')
@@ -128,7 +167,7 @@ export const useContractCall = ({
     return () => {
       canceled = true
     }
-  }, [updateAbi, network, to, blockExplorerApiKey])
+  }, [updateAbi, network, to, provider, blockExplorerApiKey])
 
   const contractInterface = useMemo(() => {
     if (!abi) return null
