@@ -175,6 +175,7 @@ It reads and updates a `CallContractTransactionInput` value, which has the follo
 | value               | `CallContractTransactionInput`                | The contract call transaction input from state                                  |
 | onChange            | `(value: CallContractTransactionInput): void` | The handler prop for updating the transaction input in the state                |
 | network             | `string`                                      | The ID of the chain on which the Gnosis Safe lives                              |
+| provider            | `ethers.Provider`                             | An ethers (read-only) provider for the given network                            |
 | blockExplorerApiKey | `string`                                      | (optional) An API key for Etherscan or the block explorer for the given network |
 
 #### Return value
