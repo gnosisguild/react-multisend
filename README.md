@@ -1,5 +1,8 @@
 # react-multisend
 
+[![Build Status](https://github.com/gnosis/react-multisend/actions/workflows/ci.yml/badge.svg)](https://github.com/gnosis/react-multisend/actions/workflows/ci.yml)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](https://github.com/gnosis/CODE_OF_CONDUCT)
+
 A headless React library for crafting multi-send transactions from a Gnosis Safe
 
 ## The problem
