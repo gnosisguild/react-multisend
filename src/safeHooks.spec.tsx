@@ -17,8 +17,8 @@ import {
 import { NetworkId } from './safe'
 
 const TEST_SAFE = {
-  address: '0x1076f084A3703E1701a1a97F837906e56370D4f9',
-  network: '4' as NetworkId,
+  address: '0xCDd6e79fBC90643dC59273500E3A408EfA24d57C',
+  network: '5' as NetworkId,
 }
 
 describe('safe hooks', () => {
@@ -58,8 +58,8 @@ describe('safe hooks', () => {
       await waitForElementToBeRemoved(getByText('loading...'), {
         timeout: 5000,
       })
-      expect(getByLabelText('ETH')).toHaveValue('0.1')
-      expect(getByLabelText('OWL')).toHaveValue('100.0')
+      expect(getByLabelText('ETH')).toHaveValue('0.01')
+      expect(getByLabelText('DAI')).toHaveValue('1000000.0')
     })
 
     it('should use the state provided via context from <ProvideSafeBalances>  when called without arg', async () => {
@@ -117,13 +117,14 @@ describe('safe hooks', () => {
     }
 
     it('should provide the details about collectibles held in the Safe', async () => {
-      const { getByText, queryByLabelText } = render(<ListCollectibles />)
+      const { getByText, queryByLabelText, debug } = render(
+        <ListCollectibles />
+      )
       await waitForElementToBeRemoved(getByText('loading...'), {
         timeout: 5000,
       })
-      expect(
-        queryByLabelText('Football: DUMMY1 - Tester 1 [26/50]')
-      ).toBeInTheDocument()
+      debug()
+      expect(queryByLabelText('ZodiacWands:')).toBeInTheDocument()
     })
 
     it('should use the state provided via context from <ProvideSafeCollectibles> when called without arg', async () => {
@@ -147,8 +148,8 @@ describe('safe hooks', () => {
           expect(renderSpy).toHaveBeenCalledWith(
             expect.arrayContaining([
               expect.objectContaining({
-                address: '0xF746eaed559A99091ed8F702d0b816a8BF369De0',
-                id: '94',
+                address: '0xBe41D6b67D1796A7196f08f43165724E196C15F1',
+                id: '4',
               }),
             ]),
             false
@@ -171,7 +172,7 @@ describe('safe hooks', () => {
     fireEvent.click(getByText('fetch'))
     const loadingIndicator = getByText('loading...')
     await waitForElementToBeRemoved(loadingIndicator, { timeout: 5000 })
-    expect(getByLabelText('ETH')).toHaveValue('0.1')
+    expect(getByLabelText('ETH')).toHaveValue('0.01')
   })
 
   it('should expose the error if the fetch goes wrong', async () => {
@@ -276,6 +277,6 @@ describe('safe hooks', () => {
 
     fireEvent.click(getByText('fetch from other'))
     await waitForElementToBeRemoved(getByText('loading...'), { timeout: 5000 })
-    expect(getByLabelText('ETH')).toHaveValue('0.1')
+    expect(getByLabelText('ETH')).toHaveValue('0.01')
   })
 })
