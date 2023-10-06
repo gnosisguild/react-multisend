@@ -19,7 +19,6 @@ import { NetworkId } from './safe'
 
 const EXPLORER_API_URLS = {
   '1': 'https://api.etherscan.io/api',
-  '4': 'https://api-rinkeby.etherscan.io/api',
   '5': 'https://api-goerli.etherscan.io/api',
   '100': 'https://blockscout.com/xdai/mainnet/api',
   '73799': 'https://volta-explorer.energyweb.org/api',
@@ -219,17 +218,15 @@ export const useContractCall = ({
 
   const inputs = useMemo(
     () =>
-      (inputTypes || [])
-        .filter((inputType) => !!inputType.name) // don't render fields for unnamed inputs
-        .map((inputType) => ({
-          name: inputType.name,
-          type: inputType.type,
-          baseType: inputType.baseType,
-          arrayChildren: inputType.arrayChildren,
-          arrayLength: inputType.arrayLength,
-          components: inputType.components,
-          value: inputValues[inputType.name],
-        })),
+      (inputTypes || []).map((inputType, index) => ({
+        name: inputType.name,
+        type: inputType.type,
+        baseType: inputType.baseType,
+        arrayChildren: inputType.arrayChildren,
+        arrayLength: inputType.arrayLength,
+        components: inputType.components,
+        value: inputValues[index],
+      })),
     [inputTypes, inputValues]
   )
 
