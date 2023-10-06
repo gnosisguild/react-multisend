@@ -1,6 +1,6 @@
 {
   "name": "react-multisend",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "main": "build/cjm/index.js",
   "typings": "build/cjs/index.d.ts",
   "module": "build/esm/index.js",
@@ -34,7 +34,7 @@
     "@ethersproject/abstract-provider": "^5.5.1",
     "@ethersproject/address": "^5.0.0",
     "@ethersproject/bignumber": "^5.0.0",
-    "ethers-multisend": "^2.0.0",
+    "ethers-multisend": "^3.0.0",
     "ethers-proxies": "^1.0.0"
   },
   "devDependencies": {

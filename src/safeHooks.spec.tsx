@@ -124,7 +124,7 @@ describe('safe hooks', () => {
         timeout: 5000,
       })
       debug()
-      expect(queryByLabelText('ZodiacWands:')).toBeInTheDocument()
+      expect(queryByLabelText(/ZodiacWands/)).toBeInTheDocument()
     })
 
     it('should use the state provided via context from <ProvideSafeCollectibles> when called without arg', async () => {
