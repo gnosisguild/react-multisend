@@ -2,15 +2,14 @@ import { getAddress } from '@ethersproject/address'
 import { BigNumber } from '@ethersproject/bignumber'
 
 const API_BASE = {
-  '1': 'https://safe-transaction.gnosis.io/api/v1',
-  '4': 'https://safe-transaction.rinkeby.gnosis.io/api/v1',
-  '5': 'https://safe-transaction.goerli.gnosis.io/api/v1',
-  '100': 'https://safe-transaction.xdai.gnosis.io/api/v1',
-  '73799': 'https://safe-transaction.volta.gnosis.io/api/v1',
-  '246': 'https://safe-transaction.ewc.gnosis.io/api/v1',
-  '137': 'https://safe-transaction.polygon.gnosis.io/api/v1',
-  '56': 'https://safe-transaction.bsc.gnosis.io/api/v1',
-  '42161': 'https://safe-transaction.arbitrum.gnosis.io/api/v1',
+  '1': 'https://safe-transaction-mainnet.safe.global',
+  '5': 'https://safe-transaction-goerli.safe.global',
+  '100': 'https://safe-transaction-gnosis-chain.safe.global',
+  '73799': 'https://safe-transaction-volta.safe.global',
+  '246': 'https://safe-transaction-ewc.safe.global',
+  '137': 'https://safe-transaction-polygon.safe.global',
+  '56': 'https://safe-transaction-bsc.safe.global',
+  '42161': 'https://safe-transaction-arbitrum.safe.global',
 }
 
 export type NetworkId = keyof typeof API_BASE
@@ -18,11 +17,12 @@ export type NetworkId = keyof typeof API_BASE
 const fetchFromSafeApi = async (
   safeAddress: string,
   networkId: NetworkId,
-  endpoint: 'balances' | 'collectibles'
+  endpoint: 'balances' | 'collectibles',
+  version: 1 | 2 = 1
 ) => {
   const apiBase = API_BASE[networkId]
   const response = await fetch(
-    `${apiBase}/safes/${getAddress(safeAddress)}/${endpoint}/`
+    `${apiBase}/api/v${version}/safes/${getAddress(safeAddress)}/${endpoint}/`
   )
   if (!response.ok) {
     throw Error(response.statusText)
@@ -85,10 +85,6 @@ export const fetchCollectibles = async (
   safeAddress: string,
   networkId: NetworkId
 ): Promise<Collectible[]> => {
-  const collectibles: Collectible[] = await fetchFromSafeApi(
-    safeAddress,
-    networkId,
-    'collectibles'
-  )
-  return collectibles
+  const page = await fetchFromSafeApi(safeAddress, networkId, 'collectibles', 2)
+  return page.results as Collectible[]
 }
